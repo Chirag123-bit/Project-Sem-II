@@ -693,7 +693,7 @@ class Admin_login(TKWindow):
 
         self.treeview = ttk.Treeview(self.frm, columns=(1, 2, 3, 4, 5, 6, 7), show="headings",
                                      style='Calendar.Treeview', selectmode="extended")
-        self.treeview.bind('<Double-Button-1>', self.getrow)
+        self.treeview.bind('<Button-1>', self.getrow)
         my_scrl = Scrollbar(self.frm, orient=HORIZONTAL, command=self.treeview.xview)
         my_scrl2 = Scrollbar(self.frm, orient=VERTICAL, command=self.treeview.yview)
         self.treeview.config(xscrollcommand=my_scrl.set)
