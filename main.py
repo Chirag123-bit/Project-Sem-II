@@ -1022,7 +1022,7 @@ class Admin_login(TKWindow):
 
 
 class user_login(TKWindow):
-    """Student's personal window where they can view their result. They don;t have any administrative control over them.
+    """Student's personal window where they can view their result. They don't have any administrative control over them.
     Students can only view their result and can not do anything to change the result."""
     def __init__(self):
         super().__init__()
