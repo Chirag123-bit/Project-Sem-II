@@ -12,20 +12,21 @@ from abc import ABC, abstractmethod
 
 
 class TKWindow():
+    """This is main window which will be inherited by all the classes expect "Database class" """
     def __init__(self):
         self.root = Tk()
-        self.root.title("Login Page")
+        self.root.title("Login Page") #Setting title of first window
         self.root.geometry("1067x600+230+40")  # Defining screen size of our app
-        self.root.iconbitmap('Images/logo.ico')
+        self.root.iconbitmap('Images/logo.ico') # importing logo from "Images" folder
         self.Reg_fonts = ('Helvetica', 12)
-        self.sft_img = ImageTk.PhotoImage(Image.open("Images/softwarica.png"))
+        self.sft_img = ImageTk.PhotoImage(Image.open("Images/softwarica.png")) #Placing image inside label
         self.wel = LabelFrame(self.root, bg="black", highlightbackground="black", highlightcolor="black")
-        self.wel.pack(side="top", fill="x")
+        self.wel.pack(side="top", fill="x") #Creating frames which will hold college's logo
         self.logo_img = Label(self.wel, image=self.sft_img, bg="black")
         self.logo_img.pack(fill="both", expand=3)
-        logo_img = ImageTk.PhotoImage(Image.open("Images/Student2.png"))
+        logo_img = ImageTk.PhotoImage(Image.open("Images/Student2.png")) #Importing logo
         self.std_log = Label(self.wel, image=logo_img, bg="black")
-        self.std_log.place(x=0, y=0)
+        self.std_log.place(x=0, y=0) #Placing logo on left
         self.std_log1 = Label(self.wel, image=logo_img, bg="black")
         self.root.iconbitmap('Images/logo.ico')
 
@@ -41,7 +42,7 @@ class TKWindow():
 
 
 class Login(TKWindow):
-
+    """This is login window. This window will validate user's credentials and redirect them to their personal account or register new users."""
     def __init__(self):
         super().__init__()
         self.ttk = ttk
@@ -94,6 +95,7 @@ class Login(TKWindow):
         self.root1.mainloop()
 
     def labels(self, Text, x, y):
+        """This functions will generate all labels for this window."""
         b = Label(self.frame, text=Text, font=self.button_font, anchor=W, width=8,
                   fg="blue")
         b.grid(row=x, column=y, sticky=W)
@@ -108,6 +110,7 @@ class Login(TKWindow):
         g.grid(row=5, column=0)
 
     def button(self, text_, x, y, ab, cd, comm):
+        """Opens new window depending on user's input(login/register)"""
         if comm == "log":
             but = ttk.Button(self.root1, text=text_,
                              command=self.button_pressed_login, padding=6
@@ -172,6 +175,7 @@ class Login(TKWindow):
                     messagebox.showerror("Required Fields Missing", "Please Enter your Credentials")
 
     def show_pass(self):
+        """Function to reset password. User's email address and username is required for this class"""
         global em_entr, un_entr, submt, pass_entry, record123
         self.rs_win = Toplevel(self.root1)
         em_lbl = Label(self.rs_win, text="Enter Email Address::: ").grid(row=0, column=0)
@@ -192,6 +196,7 @@ class Login(TKWindow):
 
 
     def check(self):
+        """If verification is sucessful, reset button is enabled."""
         pass_entry["state"] = NORMAL
         submt["state"] = NORMAL
         submt["command"] = lambda: Database.replce_pass(Database, pass_entry.get())
@@ -201,7 +206,9 @@ class Login(TKWindow):
 
 
 class Register(TKWindow):
-    """Here, Phone Number is changed into User Name"""
+    """Here, Phone Number is changed into User Name
+    New users are registered here."""
+
 
     def __init__(self):
         global img, F_Name, L_Name, E_Add, Passwd, Phone, Passwd2, DoB
@@ -255,6 +262,7 @@ class Register(TKWindow):
         self.root2.mainloop()
 
     def Reg_scrn(self, Text, X, Y, a, b, var):
+        """Creating all the entry boxes and labels for this window"""
         global suffix, entry1, grade, section
         labls = Label(self.root2, text=Text, font=self.Reg_fonts, anchor=NW, width=12, borderwidth=2, relief="ridge",
                       justify="center")
@@ -300,6 +308,7 @@ class Register(TKWindow):
         buttncanc.place(x=300, y=550)
 
     def reg_cal(self):
+        """Placing calender in the registration scree for easy selection of dates"""
         global caln, cal_frame, btn
         cal_frame = Frame(self.root2).pack()
         caln = Calendar(cal_frame, selectmode="day", year=2020, month=6, day=12)
@@ -317,6 +326,7 @@ class Register(TKWindow):
         btn.destroy()
 
     def submit(self):
+        """Using RE(Regular expression) to validate user's email address and registering user into database if all conditions are satisfied."""
         regex = '^[a-z0-9]+[\._]?[a-z0-9]+@gmail.com$'  # This is regex(regular expression) expression
         # Here ^ and $ suggests beggining and end of lime
         # 
@@ -381,6 +391,7 @@ class Register(TKWindow):
 
 
 class Database(ABC):
+    """Initialize database and do all database related works"""
     def __init__(self):
         # Establishing the connection To database
         self.conn = sqlite3.connect("Login_Data.db")
@@ -437,6 +448,7 @@ class Database(ABC):
 
 
     def replce_pass(self, new_pass):
+        """Passowrd reset info is validated here. If user's info is validated, the buttons are unlocked."""
         self.conn = sqlite3.connect("Login_Data.db")
         self.c = self.conn.cursor()
         self.c.execute("""UPDATE Data SET
@@ -455,6 +467,7 @@ class Database(ABC):
 
 
     def Delete(self, oid_list, oid_num):
+        """Deletes student's data from admin's page"""
         conn = sqlite3.connect("Login_Data.db")
         c = conn.cursor()
         id = int(oid_num)
@@ -472,6 +485,8 @@ class Database(ABC):
 
 
 class Admin_login(TKWindow):
+    """Administrative page/window of this program.
+    Can update, remove student's data. This window has administrative access over all other accounts. Admin can also send emails through this window."""
     def __init__(self):
         super().__init__()
         global oid_num, Mth, Sci, Nep, Eng, Soc, Com, EP, Geo, root3, email_add
@@ -586,6 +601,7 @@ class Admin_login(TKWindow):
         Login()
 
     def dark_mode(self):
+        """Function for enabling dark mode"""
         self.col = ("black", "white")
         self.root3.config(bg="black")
         self.lbl.config(bg="black", fg="white")
@@ -635,6 +651,7 @@ class Admin_login(TKWindow):
             pass
 
     def reg_mode(self):
+        """Function for reverting back to regular mode."""
         self.col = ("snow", "black")
         self.root3.config(bg="seashell")
         self.lbl.config(bg="azure2", fg="black")
@@ -670,7 +687,7 @@ class Admin_login(TKWindow):
 
         self.lbl2.config(bg="snow", fg="black")
         self.usr_lbl.config(bg="azure2", fg="black")
-        try:
+        try: #If user selects this mode before percentage label is created, this will generate an error. To prevent this error handling is used.
             self.lbl2.grid_forget()
             self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6)
             self.Percentage_label.grid_forget()
@@ -683,6 +700,7 @@ class Admin_login(TKWindow):
         self.txt_box.config(bg="old lace", fg="gray0")
 
     def query(self):
+        """Function to show student's info in treeview for better redability and managebility."""
         global Name_list, oid_list
         self.search.delete(0, END)
         self.frm = LabelFrame(self.root3, text="User's Details", highlightcolor="Green",
@@ -741,6 +759,7 @@ class Admin_login(TKWindow):
         conn.close()
 
     def lables_and_entries(self, Text, X, Y, A, B, vari, col, col1):
+        """Generates all labels and entries for this window"""
         self.usr_lbl1 = Label(self.lbl, text=Text, justify=LEFT, compound=LEFT, font=10, bg=col, fg=col1)
         self.usr_lbl1.grid(row=X, column=Y)
         self.usr_lbl = Label(self.lbl, text="Select a Student:", justify=LEFT, compound=LEFT, padx=10, font=10,
@@ -751,6 +770,7 @@ class Admin_login(TKWindow):
         self.usr_ent.grid(row=A, column=B)
 
     def getrow(self, event):
+        """Get student's OID for performing database operations"""
         try:
             item = self.treeview.item(self.treeview.focus())
             self.f_name1.set(item["values"][1])
@@ -772,6 +792,7 @@ class Admin_login(TKWindow):
 
 
     def Oid_box(self):
+        """Creates box/entry field where OID is displayed."""
         global stud_name, Name_list, oid_entry
         stud_name = StringVar("")
         stud_name.set("Select a Student")
@@ -784,6 +805,7 @@ class Admin_login(TKWindow):
         self.del_btn["command"] = lambda: Database.Delete(Database, oid_list, self.oid_num.get())
 
     def search_lst(self):
+        """Creates search window for filtering users"""
         value = self.search.get()
         conn = sqlite3.connect("Login_Data.db")
         c = conn.cursor()
@@ -816,6 +838,7 @@ class Admin_login(TKWindow):
         self.showing_values_in_entries()
 
     def showing_values_in_entries(self):
+        """Function to show marks of selected users in respective entry boxes."""
         global Total, email_add
         self.txt_box["state"] = NORMAL
         self.send_btn["state"] = NORMAL
@@ -868,10 +891,12 @@ class Admin_login(TKWindow):
         self.eml_add_lbl["state"] = DISABLED
 
     def refresh(self):
+        #To refresh treeview frame after updating entries
         root3.destroy()
         Admin_login()
 
     def updating_values(self):
+        """To update student's marks"""
         global Total
         if int(Mth.get()) > 100 or int(Sci.get()) > 100 or int(Nep.get()) > 100 or int(Eng.get()) > 100 or int(
                 Soc.get()) > 100 or int(Com.get()) > 100 or int(EP.get()) > 100 or int(Geo.get()) > 100:
@@ -911,6 +936,7 @@ class Admin_login(TKWindow):
             self.send_btn["state"] = NORMAL
 
     def updating_info(self):
+        """Cretes new window where user's personal info such as f/l name is displayed which can be changed by admin."""
         self.oid_num["state"] = DISABLED
         self.info_win = Toplevel(self.root3, bg="black")
         f_name = Entry(self.info_win, font=('Verdana', 12), bg="black", fg="white", textvariable=self.f_name1)
@@ -943,6 +969,7 @@ class Admin_login(TKWindow):
                                                                                                            column=Y)
 
     def updating_recs(self, f_name, l_name, u_name, cls, sec, e_add):
+        """Updates personal info such as f/l name."""
         conn = sqlite3.connect("Login_Data.db")
         c = conn.cursor()
         c.execute("""UPDATE Data SET
@@ -970,6 +997,7 @@ class Admin_login(TKWindow):
 
 
     def __Gmail_msg(self):
+        """Sends email to the selected users."""
         try:
             with smtplib.SMTP_SSL("smtp.gmail.com", 465)as smtp:
                 Email_address = self.__useremail
@@ -994,6 +1022,8 @@ class Admin_login(TKWindow):
 
 
 class user_login(TKWindow):
+    """Student's personal window where they can view their result. They don;t have any administrative control over them.
+    Students can only view their result and can not do anything to change the result."""
     def __init__(self):
         super().__init__()
         self.root4 = self.root
@@ -1088,12 +1118,15 @@ class user_login(TKWindow):
         Login()
 
     def lables_and_entries(self, Text, X, Y):
+        "Creates labels for this window"
         Label(self.lbl, text=Text, justify=LEFT, compound=LEFT, font=10, bg="black", fg="white",width=12).grid(row=X, column=Y)
 
     def detail_label(self, Text, X, Y):
+
         Label(self.lbl2, text=Text, justify=LEFT, compound=LEFT, font=12, bg="black", fg="white").grid(row=X, column=Y,sticky=NSEW)
 
     def DataBase_Calls(self):
+        """This window wil fetch their result on the basis of the username and OID of the student"""
 
         conn = sqlite3.connect("Login_Data.db")
         c = conn.cursor()
