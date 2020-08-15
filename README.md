@@ -20,4 +20,4 @@ e.g. Username = Chirag12
      Password = 123
 
 **Note: Every student has his/her unique set of credintials which are cteated by then during registration.
-     This Program is not limited to only two set of credintials shown above. **
+     This Program is NOT LIMITED to the set of credintials shown above.**
