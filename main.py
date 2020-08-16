@@ -1045,8 +1045,8 @@ class user_login(TKWindow):
         Label(self.wel, image=igm, bg="black").place(x=760, y=0)
         address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=8, bg="black", fg="blue")
         address_label.place(x=335, y=80)
-        rpt_crd = Label(self.root4,text="Report Card", font=20,bg="black",fg="snow")
-        rpt_crd.place(x=365,y=115)
+        rpt_crd = Label(self.root4,text="Report Card", font=60,bg="black",fg="blue2")
+        rpt_crd.place(x=380,y=125)
 
         ttk.Button(self.root4,text="Exit",command=self.ext).place(x=350,y=420,width=150, height=35)
 
