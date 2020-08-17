@@ -471,7 +471,6 @@ class Database(ABC):
         conn = sqlite3.connect("Login_Data.db")
         c = conn.cursor()
         id = int(oid_num)
-        print(id)
         if id in oid_list:
             c.execute("""DELETE from Data WHERE oid =  """ + str(id))
             conn.commit()
