@@ -16,8 +16,8 @@ class Login(master.TKWindow):
     """This is login window. This window will validate user's credentials and redirect them to their personal account or register new users."""
     def __init__(self):
         super().__init__()
-        self.ttk = ttk
         self.root1 = self.root
+        self.ttk = ttk
         self.root1.resizable(False, False)
         ######################################################Images#################################################
         image = ImageTk.PhotoImage(Image.open("Images/Root_Backgroung.jpg"))  # adding background image in root

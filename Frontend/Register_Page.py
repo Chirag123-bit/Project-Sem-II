@@ -1,13 +1,14 @@
-import sqlite3
+
 from tkinter import *
 
 from PIL import ImageTk, Image
 from tkinter import messagebox, ttk
-import smtplib
-from email.message import EmailMessage
 from tkcalendar import *
 import re
 import Frontend.main as master
+import model.User
+import Backend.DBConnect
+
 
 class Register(master.TKWindow):
     """Here, Phone Number is changed into User Name
@@ -18,7 +19,6 @@ class Register(master.TKWindow):
         global img, F_Name, L_Name, E_Add, Passwd, Phone, Passwd2, DoB
         super().__init__()
         self.wel.pack_forget()
-
         self.root2 = self.root
         self.root2.geometry("960x600+200+0")
         self.root2.title("Softwarica College Registration Form")
@@ -37,6 +37,7 @@ class Register(master.TKWindow):
         self.std_log = Label(self.wel, image=logo_img, bg="SteelBlue1")
         self.std_log.place(x=0, y=0)
         self.std_log12 = Label(self.wel, image=logo_img, bg="SteelBlue1").place(y=0, x=850)
+        self.db = Backend.DBConnect.DBConnect()
 
         address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=13, bg="SteelBlue1", fg="blue2")
         address_label.place(x=395, y=80)
@@ -132,64 +133,36 @@ class Register(master.TKWindow):
 
     def submit(self):
         """Using RE(Regular expression) to validate user's email address and registering user into database if all conditions are satisfied."""
-        regex = '^[a-z0-9]+[\._]?[a-z0-9]+@gmail.com$'  # This is regex(regular expression) expression
-        # Here ^ and $ suggests beggining and end of lime
-        #
-        # Establishing the connection To database
-        conn = sqlite3.connect("Login_Data.db")
-        # Creating cursor to add or retrive data from DB
-        c = conn.cursor()
-        ver = (re.search(regex, E_Add.get()))
-        find_user = ("SELECT * FROM Data WHERE user_name = ? ")
-        c.execute(find_user, [(Phone.get())])
-        result = c.fetchall()
-        if result:
-            messagebox.showerror("Invalid Username", "This username is already taken. Please enter another username.")
+        regex = '^[a-z0-9]+[\._]?[a-z0-9]+@gmail.com$'  # This is regex(regular expression) expression for checking if email address is correct
+        # Here ^ and $ suggests beginning and end of lime
 
-        elif Passwd.get() == Passwd2.get() and (
+        ver = (re.search(regex, E_Add.get()))
+
+
+        if Passwd.get() == Passwd2.get() and (
                 len(F_Name.get()) != 0 and len(L_Name.get()) != 0 and len(Passwd.get()) != 0 and len(
             E_Add.get()) != 0 and len(Phone.get()) != 0 and len(Passwd2.get()) != 0) and ver != None:
-            # Inserting Data into DB
-            c.execute(
-                """INSERT INTO Data VALUES(:f_name,:password,:l_name,:e_address,:user_name,:Maths,:Science,:Nepali,
-                :English,:Social,:Computer,:EPH,:Geography,:suffix,:DOB,:Class,:Section) """,
-                {
-                    "f_name": F_Name.get(),
-                    "password": Passwd.get(),
-                    "l_name": L_Name.get(),
-                    "e_address": E_Add.get(),
-                    "user_name": Phone.get(),
-                    "Maths": 0,
-                    "Science": 0,
-                    "Nepali": 0,
-                    "English": 0,
-                    "Social": 0,
-                    "Computer": 0,
-                    "EPH": 0,
-                    "Geography": 0,
-                    "suffix": suffix.get(),
-                    "DOB": self.dob_entry.get(),
-                    "Class": grade.get(),
-                    "Section": section.get()
-                })
 
-            # Commiting Changes
-            conn.commit()
-            # Closing Connection
-            conn.close()
+            u = model.User.User(F_Name.get(),L_Name.get(),E_Add.get(),Passwd.get(),Phone.get(),
+                                self.dob_entry.get(),grade.get(),section.get(),suffix.get())
+
+            query = "INSERT INTO user_info(FName,LName,EAddress,Password,UserName,DOB,Class,Section,Suffix)  \
+                                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            values = (u.get_fname(),u.get_lname(),u.get_eadd(),u.get_passwd(),u.get_uname(),
+                      u.get_dob(),u.get_cls(),u.get_sec(),u.get_suff())
+            self.db.insert(query,values)
+
+
             messagebox.showinfo("Sucess", "User Added")
-            self.root2.destroy()
-            Login()
+            Frontend.Login_Page.Login()
 
 
         elif Passwd.get() != Passwd2.get():
             messagebox.showerror("Invalid Password", "Please Re-check your Password!!")
             entry1.delete(0, END)
+
         elif ver == None:
             messagebox.showerror("Invalid Email", "Please enter a valid Email Address!")
-
-
-
 
         else:
             messagebox.showerror("Required Field Missing", "Please Fill all the given fields!!")

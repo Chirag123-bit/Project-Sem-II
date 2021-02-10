@@ -1,7 +1,5 @@
 from tkinter import *
-
 from PIL import ImageTk, Image
-
 
 
 
@@ -24,6 +22,10 @@ class TKWindow():
         self.std_log.place(x=0, y=0) #Placing logo on left
         self.std_log1 = Label(self.wel, image=logo_img, bg="black")
         self.root.iconbitmap('Images/logo.ico')
+
+
+
+
 
 
 
