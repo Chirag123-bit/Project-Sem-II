@@ -1,5 +1,6 @@
 from tkinter import *
 from PIL import ImageTk, Image
+import Frontend.Login_Page as login
 
 
 
@@ -8,7 +9,7 @@ class TKWindow():
     """This is main window which will be inherited by all the classes expect "Database class" """
     def __init__(self):
         self.root = Tk()
-        self.root.title("Login Page") #Setting title of first window
+        """self.root.title("Login Page") #Setting title of first window
         self.root.geometry("1067x600+230+40")  # Defining screen size of our app
         self.root.iconbitmap('Images/logo.ico') # importing logo from "Images" folder
         self.Reg_fonts = ('Helvetica', 12)
@@ -21,7 +22,13 @@ class TKWindow():
         self.std_log = Label(self.wel, image=logo_img, bg="black")
         self.std_log.place(x=0, y=0) #Placing logo on left
         self.std_log1 = Label(self.wel, image=logo_img, bg="black")
-        self.root.iconbitmap('Images/logo.ico')
+        self.root.iconbitmap('Images/logo.ico')"""
+
+
+if __name__ == '__main__':
+    tk = Tk()
+    login.Login(tk)
+
 
 
 

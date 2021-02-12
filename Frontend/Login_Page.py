@@ -5,6 +5,7 @@ from PIL import ImageTk, Image
 from tkinter import messagebox, ttk
 import Frontend.Register_Page
 import Frontend.main as master
+import Frontend.Admin_Pannel
 
 
 
@@ -14,16 +15,31 @@ import Frontend.main as master
 
 class Login(master.TKWindow):
     """This is login window. This window will validate user's credentials and redirect them to their personal account or register new users."""
-    def __init__(self):
-        super().__init__()
-        self.root1 = self.root
+    def __init__(self,root):
+        self.root = root
+        self.root.title("Login Page")  # Setting title of first window
+        self.root.geometry("1067x600+230+40")  # Defining screen size of our app
+        self.root.iconbitmap('Images/logo.ico')  # importing logo from "Images" folder
+        self.Reg_fonts = ('Helvetica', 12)
+        self.sft_img = ImageTk.PhotoImage(Image.open("Images/softwarica.png"))  # Placing image inside label
+        self.wel = LabelFrame(self.root, bg="black", highlightbackground="black", highlightcolor="black")
+        self.wel.pack(side="top", fill="x")  # Creating frames which will hold college's logo
+        self.logo_img = Label(self.wel, image=self.sft_img, bg="black")
+        self.logo_img.pack(fill="both", expand=3)
+        logo_img = ImageTk.PhotoImage(Image.open("Images/Student2.png"))  # Importing logo
+        self.std_log = Label(self.wel, image=logo_img, bg="black")
+        self.std_log.place(x=0, y=0)  # Placing logo on left
+        self.std_log1 = Label(self.wel, image=logo_img, bg="black")
+        self.root.iconbitmap('Images/logo.ico')
+        
+        
         self.ttk = ttk
-        self.root1.resizable(False, False)
+        self.root.resizable(False, False)
         ######################################################Images#################################################
         image = ImageTk.PhotoImage(Image.open("Images/Root_Backgroung.jpg"))  # adding background image in root
-        abc = Label(self.root1, image=image)  # Placing the image file inside the label
+        abc = Label(self.root, image=image)  # Placing the image file inside the label
         abc.place(x=0, y=0, relwidth=1, relheight=1)  # place enables to write over a label
-        self.frame = LabelFrame(self.root1, width=550, height=200, text="Login", relief=RAISED, bd=1,
+        self.frame = LabelFrame(self.root, width=550, height=200, text="Login", relief=RAISED, bd=1,
                                 highlightcolor="blue", fg="blue",
                                 highlightbackground="Black", highlightthickness=5)
         self.frame.place(x=328, y=190)
@@ -34,13 +50,13 @@ class Login(master.TKWindow):
         Password_Label = Label(self.frame, image=self.password_icon)
         Password_Label.grid(row=4, column=0)
         self.student_icon = ImageTk.PhotoImage(Image.open("Images/Student3.png"))
-        std_label = Label(self.root1, image=self.student_icon, bg="blue", fg="gray10")
+        std_label = Label(self.root, image=self.student_icon, bg="blue", fg="gray10")
         std_label.place(x=482, y=59)
         self.Reg = ImageTk.PhotoImage(Image.open("Images/Register.png"))
-        usr_reg = Label(self.root1, image=self.Reg)
+        usr_reg = Label(self.root, image=self.Reg)
         usr_reg.place(x=332, y=346)
         self.logn = ImageTk.PhotoImage(Image.open("Images/Login.png"))
-        logn_img = Label(self.root1, image=self.logn)
+        logn_img = Label(self.root, image=self.logn)
         logn_img.place(x=620, y=346)
 
         ######################################################Buttons And Labels##################################################
@@ -51,7 +67,7 @@ class Login(master.TKWindow):
         self.pass1 = StringVar("")
         self.entry()
 
-        self.lbl = ttk.Label(self.root1, text="Student Login System", font=self.button_font, background="white",
+        self.lbl = ttk.Label(self.root, text="Student Login System", font=self.button_font, background="white",
                              foreground="blue")
         self.lbl.place(x=420, y=25)
 
@@ -62,8 +78,8 @@ class Login(master.TKWindow):
         abz = ImageTk.PhotoImage(Image.open("Images/Forgot_pass.png"))
         for_pas_img = Label(self.frame, image=abz)
         for_pas_img.place(x=282, y=105)
-        ######################################################Root1 Mainloop##################################################
-        self.root1.mainloop()
+        ######################################################root Mainloop##################################################
+        self.root.mainloop()
 
     def labels(self, Text, x, y):
         """This functions will generate all labels for this window."""
@@ -83,12 +99,12 @@ class Login(master.TKWindow):
     def button(self, text_, x, y, ab, cd, comm):
         """Opens new window depending on user's input(login/register)"""
         if comm == "log":
-            but = ttk.Button(self.root1, text=text_,
+            but = ttk.Button(self.root, text=text_,
                              command=self.button_pressed_login, padding=6
                              )
             but.place(x=ab, y=cd)
         else:
-            but = ttk.Button(self.root1, text=text_, padding=6,
+            but = ttk.Button(self.root, text=text_, padding=6,
                              command=self.button_pressed_register)
             but.place(x=ab, y=cd)
 
@@ -100,16 +116,17 @@ class Login(master.TKWindow):
         pas.grid(row=4, column=7)
 
     def button_pressed_register(self):
-        self.root1.destroy()
-        Frontend.Register_Page.Register()
+        tk = Toplevel()
+        Frontend.Register_Page.Register(tk)
 
 
     def button_pressed_login(self):
         global usr_oid, rs_pas, rs_eml, rs_usrnm
 
         if self.usr1.get() == "root" and self.pass1.get() == "root":
-            self.root1.destroy()
-            TKWindow.switch_class(TKWindow,Admin_login)
+            self.root.destroy()
+            tk=Tk()
+            Frontend.Admin_Pannel.Admin_login(tk)
 
         elif self.usr1.get() == "root" and self.pass1.get() != "root":
             messagebox.showerror("Error", "Please enter a valid password!")
@@ -130,7 +147,7 @@ class Login(master.TKWindow):
                     rs_eml = i[3]
                     rs_usrnm = i[4]
                     messagebox.showinfo("Welcome", "Welcome  " + str(i[13]) + str(i[0]) + " " + str(i[2]))
-                    self.root1.destroy()
+                    self.root.destroy()
                     TKWindow.switch_class(TKWindow,user_login)
 
             else:
@@ -141,7 +158,7 @@ class Login(master.TKWindow):
                         self.pass1.set("")
                     else:
                         messagebox.showwarning("Message", "Exiting Program")
-                        self.root1.destroy()
+                        self.root.destroy()
 
                 else:
                     messagebox.showerror("Required Fields Missing", "Please Enter your Credentials")
@@ -149,7 +166,7 @@ class Login(master.TKWindow):
     def show_pass(self):
         """Function to reset password. User's email address and username is required for this class"""
         global em_entr, un_entr, submt, pass_entry, record123
-        self.rs_win = Toplevel(self.root1)
+        self.rs_win = Toplevel(self.root)
         em_lbl = Label(self.rs_win, text="Enter Email Address::: ").grid(row=0, column=0)
         un_lbl = Label(self.rs_win, text="Enter User Name::: ").grid(row=1, column=0)
         em_entr = Entry(self.rs_win, font=('Verdana', 12))
@@ -173,5 +190,3 @@ class Login(master.TKWindow):
         submt["state"] = NORMAL
         submt["command"] = lambda: Database.replce_pass(Database, pass_entry.get())
 
-
-login = Login()

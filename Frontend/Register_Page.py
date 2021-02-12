@@ -10,19 +10,18 @@ import model.User
 import Backend.DBConnect
 
 
-class Register(master.TKWindow):
+class Register():
     """Here, Phone Number is changed into User Name
     New users are registered here."""
 
 
-    def __init__(self):
-        global img, F_Name, L_Name, E_Add, Passwd, Phone, Passwd2, DoB
-        super().__init__()
-        self.wel.pack_forget()
-        self.root2 = self.root
+    def __init__(self,root):
+        global img, F_Name, L_Name, E_Add, Passwd, Username, Passwd2, DoB
+        self.root2 = root
         self.root2.geometry("960x600+200+0")
         self.root2.title("Softwarica College Registration Form")
         self.root2.resizable("False", "False")
+        self.Reg_fonts = ('Helvetica', 12)
         back_img = ImageTk.PhotoImage(Image.open("Images/Reg_Back.jpg"))
         img = Label(self.root2, image=back_img)
         img.place(x=0, y=0, relwidth=1, relheight=1)
@@ -45,7 +44,7 @@ class Register(master.TKWindow):
         L_Name = StringVar("")
         E_Add = StringVar("")
         Passwd = StringVar("")
-        Phone = StringVar("")
+        Username = StringVar("")
         Passwd2 = StringVar("")
         DoB = StringVar("")
         Label(self.root2, text="Softwarica College Registration Form", font=45, width=30,
@@ -57,7 +56,7 @@ class Register(master.TKWindow):
         self.Reg_scrn("Email Address", 100, 280, 220, 280, E_Add)
         self.Reg_scrn("Password", 495, 280, 616, 280, Passwd)
 
-        self.Reg_scrn("User Name No:", 100, 380, 220, 380, Phone)
+        self.Reg_scrn("User Name No:", 100, 380, 220, 380, Username)
         self.Reg_scrn("Confirm Pass", 495, 380, 616, 380, Passwd2)
         Button(self.root2, text="Date Of Birth", command=self.reg_cal).place(x=100, y=480)
         self.dob_entry = Entry(self.root2, font=self.Reg_fonts)
@@ -110,7 +109,7 @@ class Register(master.TKWindow):
                               command=self.submit)
         buttnreg.place(x=505, y=550)
         buttncanc = ttk.Button(self.root2, text="Cancle", padding=8,
-                               command=self.root2.destroy)
+                               command=self.btn_pressed_cancle)
         buttncanc.place(x=300, y=550)
 
     def reg_cal(self):
@@ -141,9 +140,9 @@ class Register(master.TKWindow):
 
         if Passwd.get() == Passwd2.get() and (
                 len(F_Name.get()) != 0 and len(L_Name.get()) != 0 and len(Passwd.get()) != 0 and len(
-            E_Add.get()) != 0 and len(Phone.get()) != 0 and len(Passwd2.get()) != 0) and ver != None:
+            E_Add.get()) != 0 and len(Username.get()) != 0 and len(Passwd2.get()) != 0) and ver != None:
 
-            u = model.User.User(F_Name.get(),L_Name.get(),E_Add.get(),Passwd.get(),Phone.get(),
+            u = model.User.User(F_Name.get(),L_Name.get(),E_Add.get(),Passwd.get(),Username.get(),
                                 self.dob_entry.get(),grade.get(),section.get(),suffix.get())
 
             query = "INSERT INTO user_info(FName,LName,EAddress,Password,UserName,DOB,Class,Section,Suffix)  \
@@ -154,7 +153,7 @@ class Register(master.TKWindow):
 
 
             messagebox.showinfo("Sucess", "User Added")
-            Frontend.Login_Page.Login()
+            self.root2.destroy()
 
 
         elif Passwd.get() != Passwd2.get():
@@ -166,3 +165,5 @@ class Register(master.TKWindow):
 
         else:
             messagebox.showerror("Required Field Missing", "Please Fill all the given fields!!")
+    def btn_pressed_cancle(self):
+        self.root2.destroy()
