@@ -13,10 +13,19 @@ class DBConnect:
 
 
 
-
-
     def insert(self,query,values):
         self.cur.execute(query,values)
         self.con.commit()
+
+    def select(self,query,values):
+        self.cur.execute(query, values)
+        rows = self.cur.fetchall()
+        return rows
+
+    def update(self,query,values):
+        self.cur.execute(query, values)
+        self.con.commit()
+
+
 
 DBConnect()

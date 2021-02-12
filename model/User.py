@@ -1,5 +1,4 @@
 
-
 class User:
     def __init__(self, fname, lname, eadd, passwd, uname, dob,cls, sec, suff):
         self.__fname = fname
