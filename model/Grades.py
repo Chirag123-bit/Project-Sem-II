@@ -1,6 +1,6 @@
 
 class Grades:
-    def __init__(self, Math, Science, Nepali, English, Social, Computer,EPH, Geography):
+    def __init__(self, Math, Science, Nepali, English, Social, Computer,EPH, Geography,UserName):
         self.__math = Math
         self.__science = Science
         self.__nepali = Nepali
@@ -9,6 +9,7 @@ class Grades:
         self.__computer = Computer
         self.__eph= EPH
         self.__geography = Geography
+        self.__username = UserName
 
     def set_math(self,Math):
         self.__math = Math
@@ -47,5 +48,10 @@ class Grades:
 
     def set_geography(self,Geography):
         self.__geography= Geography
-    def get_sgeography(self):
+    def get_geography(self):
         return self.__geography
+
+    def set_username(self,UserName):
+        self.__username= UserName
+    def get_username(self):
+        return self.__username

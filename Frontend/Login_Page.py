@@ -6,8 +6,9 @@ from tkinter import messagebox, ttk
 import Frontend.Register_Page
 import Frontend.main as master
 import Frontend.Admin_Pannel
-
-
+import Frontend.User_Dashboard
+import model.User
+import Backend.DBConnect
 
 
 
@@ -31,6 +32,7 @@ class Login(master.TKWindow):
         self.std_log.place(x=0, y=0)  # Placing logo on left
         self.std_log1 = Label(self.wel, image=logo_img, bg="black")
         self.root.iconbitmap('Images/logo.ico')
+        self.db = Backend.DBConnect.DBConnect()
         
         
         self.ttk = ttk
@@ -133,22 +135,22 @@ class Login(master.TKWindow):
             pas.delete(0, END)
 
         else:
-            conn = sqlite3.connect("Login_Data.db")
-            c = conn.cursor()
+            u = model.User.User(uname=self.usr1.get(), passwd=self.pass1.get())
+            query = ("SELECT * FROM user_info WHERE UserName = %s AND Password =%s ")
+            values = [u.get_uname(),u.get_passwd()]
+            records = self.db.select(query,values)
+            print(records)
 
-            find_user = ("SELECT *,oid FROM Data WHERE user_name = ? AND password =? ")
-            c.execute(find_user, [(self.usr1.get()), (self.pass1.get())])
-            result = c.fetchall()
-
-            if result:
-                for i in result:
-                    usr_oid = i[17]
-                    rs_pas = i[1]
-                    rs_eml = i[3]
+            if records:
+                for i in records:
+                    usr_oid = i[4]
+                    rs_pas = i[3]
+                    rs_eml = i[2]
                     rs_usrnm = i[4]
-                    messagebox.showinfo("Welcome", "Welcome  " + str(i[13]) + str(i[0]) + " " + str(i[2]))
+                    messagebox.showinfo("Welcome", "Welcome  " + str(i[-1]) + str(i[0]) + " " + str(i[1]))
                     self.root.destroy()
-                    TKWindow.switch_class(TKWindow,user_login)
+                    tk = Tk()
+                    Frontend.User_Dashboard.user_login(tk,usr_oid)
 
             else:
                 if len(self.usr1.get()) != 0 and len(self.pass1.get()) != 0:

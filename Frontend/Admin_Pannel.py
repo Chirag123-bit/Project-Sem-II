@@ -7,6 +7,8 @@ import smtplib
 from email.message import EmailMessage
 import Frontend.Login_Page
 import Backend.DBConnect
+import model.Grades
+import model.User
 class Admin_login():
 
     """ Administrative page/window of this program.
@@ -15,7 +17,7 @@ class Admin_login():
         Admin can also send emails through this window."""
     def __init__(self,root):
         super().__init__()
-        global oid_num, Mth, Sci, Nep, Eng, Soc, Com, EP, Geo, root3, email_add
+        global usname, Mth, Sci, Nep, Eng, Soc, Com, EP, Geo, root3, email_add
         self.root3 = root
         self.root3.geometry("1160x750+200+0")
         self.root3.resizable(False, False)
@@ -32,13 +34,14 @@ class Admin_login():
         self.std_log.place(x=0, y=0)  # Placing logo on left
         self.std_log1 = Label(self.wel, image=logo_img, bg="black")
         self.root3.iconbitmap('Images/logo.ico')
+        self.user = StringVar()
 
 
         self.__useremail = "collegeproject961@gmail.com"
         self.__userpass = "Abcde@12345"
 
 
-        self.del_btn = ttk.Button(self.root3, text="Delete Record", state=DISABLED)
+        self.del_btn = ttk.Button(self.root3, text="Delete Record", state=DISABLED, command = self.delete_user)
         self.del_btn.place(x=955, y=585, width=200, height=50)
 
         self.db = Backend.DBConnect.DBConnect()
@@ -68,8 +71,8 @@ class Admin_login():
         self.welcome.place(x=390, y=120)
         self.address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=10, bg="black", fg="white")
         self.address_label.place(x=469, y=80)
-        self.oooid = Label(self.root3, text="Student's OID::", font=15, bg="black", fg="white")
-        self.oooid.place(x=765, y=560)
+        self.oousname = Label(self.root3, text="Student's usname::", font=15, bg="black", fg="white")
+        self.oousname.place(x=765, y=560)
         self.search = Entry(self.root3, font=self.Reg_fonts)
         self.search.place(x=610, y=460, height=30)
         ttk.Button(self.root3, text="Search", command=self.search_lst).place(x=800, y=460, width=200, height=30)
@@ -77,10 +80,10 @@ class Admin_login():
         self.eee = Label(self.root3, text="F/L Name", bg="black", fg="white", font=10)
         self.eee.place(x=515, y=462)
 
-        self.oid_num = ttk.Entry(self.root3, font=self.Reg_fonts)
-        self.oid_num.insert(0, "Double tap on names above")
-        self.oid_num["state"] = DISABLED
-        self.oid_num.place(x=920, y=560)
+        self.usname = ttk.Entry(self.root3, font=self.Reg_fonts)
+        self.usname.insert(0, "Double tap on names above")
+        self.usname["state"] = DISABLED
+        self.usname.place(x=920, y=560)
         self.std_log1.place(x=1050, y=0)
 
         self.lbl = LabelFrame(self.root3, text="Student Record", highlightcolor="Green",
@@ -104,7 +107,8 @@ class Admin_login():
         self.lables_and_entries("Computer", 6, 0, 6, 1, Com, "black", "white")
         self.lables_and_entries("EPH", 7, 0, 7, 1, EP, "black", "white")
         self.lables_and_entries("Geography", 8, 0, 8, 1, Geo, "black", "white")
-        ttk.Button(self.root3, text="Update Marks", command=self.updating_values).place(x=180, y=462, width=200,
+
+        ttk.Button(self.root3, text="Update Marks", command=lambda:self.updating_values(str(self.selected_user.get()))).place(x=180, y=462, width=200,
                                                                                         height=43)
         self.updt1 = ttk.Button(self.root3, text="Update Info", command=self.updating_info, state=DISABLED)
         self.updt1.place(x=750, y=585, width=200, height=50)
@@ -148,7 +152,7 @@ class Admin_login():
         self.Dark_modelbl.config(bg="black", fg="white")
         self.dark_frm.config(bg="black", fg="white")
         self.wel.destroy()
-        self.wel = LabelFrame(self.root, bg="black", highlightbackground="black", highlightcolor="black")
+        self.wel = LabelFrame(self.root3, bg="black", highlightbackground="black", highlightcolor="black")
         self.wel.pack(side="top", fill="x")
         self.logo_img = Label(self.wel, image=self.sft_img, bg="black")
         self.logo_img.pack(fill="both", expand=3)
@@ -165,7 +169,7 @@ class Admin_login():
         self.welcome.config(bg="black", fg="white")
         self.search.config(bg="white", fg="black",font=15)
         self.eee.config(bg="black", fg="white")
-        self.oooid.config(bg="black", fg="white")
+        self.oousname.config(bg="black", fg="white")
         self.txt_box.config(bg="black", fg="chartreuse2")
 
         self.lables_and_entries("Math", 1, 0, 1, 1, Mth, "black", "white")
@@ -202,7 +206,7 @@ class Admin_login():
         self.welcome.config(bg="seashell", fg="black")
         self.search.config(bg="light yellow", fg="orange2",font=15)
         self.eee.config(bg="white", fg="black")
-        self.oooid.config(bg="white", fg="black")
+        self.oousname.config(bg="white", fg="black")
         self.wel.destroy()
         self.wel = LabelFrame(self.root3, bg="snow", highlightbackground="snow", highlightcolor="snow")
         self.wel.pack(side="top", fill="x")
@@ -241,7 +245,7 @@ class Admin_login():
 
     def query(self):
         """Function to show student's info in treeview for better readability and manageability."""
-        global Name_list, oid_list
+        global Name_list, usname_list
         self.search.delete(0, END)
         self.frm = LabelFrame(self.root3, text="User's Details", highlightcolor="Green",
                               highlightbackground="Blue", highlightthickness=3, fg="green", bg="#ffffaa", width=561,
@@ -249,7 +253,7 @@ class Admin_login():
         self.frm.place(x=598, y=170)
         self.frm.pack_propagate(False)
 
-        self.treeview = ttk.Treeview(self.frm, columns=(1, 2, 3, 4, 5, 6, 7,8), show="headings",
+        self.treeview = ttk.Treeview(self.frm, columns=(1, 2, 3, 4, 5, 6, 7, 8), show="headings",
                                      style='Calendar.Treeview', selectmode="extended")
         self.treeview.bind('<Button-1>', self.getrow)
         my_scrl = Scrollbar(self.frm, orient=HORIZONTAL, command=self.treeview.xview)
@@ -279,6 +283,17 @@ class Admin_login():
         self.treeview.heading(8, text="Section", anchor="sw")
         self.treeview.column(8, minwidth=0, width=50)
 
+        query = "select * from user_info"
+        records = self.db.select(query)
+
+        for record in records:
+            self.treeview.insert("", "end",
+                                 values=(
+                                 record[0], record[1], record[2], record[3], record[4], record[5], record[6],record[7]
+
+                                        ))
+            abcde = record[0] + " " + record[2]
+
 
 
     def lables_and_entries(self, Text, X, Y, A, B, vari, col, col1):
@@ -291,21 +306,34 @@ class Admin_login():
         self.usr_lbl.grid(row=0, column=0)
         self.usr_ent = Entry(self.lbl, textvariable=vari, font=('Verdana', 12), bg=col, fg=col1)
         self.usr_ent.grid(row=A, column=B)
+        query = "select UserName from user_info"
+        users = self.db.select(query)
+        list_of_users = []
+        for i in users:
+            list_of_users.append(i[0])
+        self.selected_user = StringVar()
+        self.selected_user.set("Select a User")
+        self.opt = OptionMenu(self.lbl, self.selected_user,*list_of_users)
+        self.opt.config(width = 16, font=('Verdana', 12))
+        self.opt.grid(row = 0, column=1)
+        self.selected_user.trace("w", self.opt_call)
+
 
     def getrow(self, event):
-        """Get student's OID for performing database operations"""
+        """Get student's usname for performing database operations"""
         try:
             item = self.treeview.item(self.treeview.focus())
             self.f_name1.set(item["values"][0])
             self.l_name1.set(item["values"][1])
             self.u_name1.set(item["values"][4])
-            self.cls1.set(item["values"][-3])
-            self.sec1.set(item["values"][-2])
+            self.cls1.set(item["values"][-2])
+            self.sec1.set(item["values"][-1])
             self.e_add1.set(item["values"][2])
-            self.oid_num["state"] = NORMAL
-            self.oid_num.delete(0, END)
-            self.oid_num.insert(0, item["values"][0])
-            self.oid_num["state"] = DISABLED
+            self.user.set(item["values"][4])
+            self.usname["state"] = NORMAL
+            self.usname.delete(0, END)
+            self.usname.insert(0, item["values"][0])
+            self.usname["state"] = DISABLED
             self.updt1["state"] = NORMAL
             self.del_btn["state"] = NORMAL
         except IndexError:
@@ -318,6 +346,7 @@ class Admin_login():
 
     def search_lst(self):
         """Creates search window for filtering users"""
+
         value = [self.search.get(),self.search.get(),self.search.get(),self.search.get()]
         query = "select * from user_info where FName like %s or LName like %s or Class like %s or Section like %s"
         rows = self.db.select(query,value)
@@ -332,12 +361,9 @@ class Admin_login():
                                 " found in our records")
 
     def opt_call(self, *args):
+        selected_user = self.selected_user.get()
+        print(selected_user)
 
-        oid_entry["state"] = NORMAL
-        oid_entry.delete(0, END)
-        stud_index = (Name_list.index((stud_name.get())))
-        oid_entry.insert(0, oid_list[stud_index])
-        oid_entry["state"] = DISABLED
         try:
             self.Percentage_label.grid_forget()
         except:
@@ -348,29 +374,26 @@ class Admin_login():
     def showing_values_in_entries(self):
         """Function to show marks of selected users in respective entry boxes."""
         global Total, email_add
+        selected_user = self.selected_user.get()
         self.txt_box["state"] = NORMAL
         self.send_btn["state"] = NORMAL
-        oid = oid_entry.get()
-        conn = sqlite3.connect("Login_Data.db")
-        c = conn.cursor()
-        c.execute("""SELECT * FROM Data WHERE OID =""" + oid)
-        records = c.fetchall()
+        usename = str(selected_user)
+        query = "select * from grades where UserName = %s"
+        value = (usename,)
+        records = self.db.select(query,value)
+        print(selected_user)
         for marks in records:
-            email = marks[3]
-            Mth.set(marks[5])
-            Sci.set(marks[6])
-            Nep.set(marks[7])
-            Eng.set(marks[8])
-            Soc.set(marks[9])
-            Com.set(marks[10])
-            EP.set(marks[11])
-            Geo.set(marks[12])
-        email_add = email
+            Mth.set(marks[1])
+            Sci.set(marks[2])
+            Nep.set(marks[3])
+            Eng.set(marks[4])
+            Soc.set(marks[5])
+            Com.set(marks[6])
+            EP.set(marks[7])
+            Geo.set(marks[8])
 
-        conn.close()
-        Total = (int(Mth.get()) + int(Sci.get()) + int(Nep.get()) + int(Eng.get()) + int(Soc.get()) + int(
-            Com.get()) + int(EP.get()) + int(Geo.get()))
 
+        Total = marks[-2]
         self.total_label = Label(self.lbl2,
                                  text=("    Total::             " + "\n" + "            " + str(Total)) + '\n',
                                  justify=LEFT, compound=LEFT,
@@ -391,12 +414,18 @@ class Admin_login():
             self.Percentage_label["fg"] = "Grey"
         else:
             self.Percentage_label["fg"] = "red"
+
+
         self.Percentage_label.grid_forget()
         self.Percentage_label.grid(row=5, column=2, rowspan=2)
         self.eml_add_lbl["state"] = NORMAL
         self.eml_add_lbl.delete(0, END)
-        self.eml_add_lbl.insert(END, email)
-        self.eml_add_lbl["state"] = DISABLED
+        query = "select EAddress from user_info where UserName = %s"
+        values = self.selected_user.get()
+        print(values)
+        #email = self.db.select(query, str(values))
+        #self.eml_add_lbl.insert(END, email)
+        #self.eml_add_lbl["state"] = DISABLED
 
     def refresh(self):
         #To refresh treeview frame after updating entries
@@ -406,16 +435,30 @@ class Admin_login():
     def updating_values(self, record):
         """To update student's marks"""
         global Total
-        if int(Mth.get()) > 100 or int(Sci.get()) > 100 or int(Nep.get()) > 100 or int(Eng.get()) > 100 or int(
-                Soc.get()) > 100 or int(Com.get()) > 100 or int(EP.get()) > 100 or int(Geo.get()) > 100:
+        g = model.Grades.Grades(Mth.get(), Sci.get(), Nep.get(), Eng.get(), Soc.get(), Com.get(), EP.get(), Geo.get(),
+                                self.selected_user.get())
+        if int(g.get_math()) > 100 or int(g.get_science()) > 100 or int(g.get_nepali()) > 100\
+                or int(g.get_english()) > 100 or int(g.get_social()) > 100 or int(g.get_computer()) > 100\
+                or int(g.get_eph()) > 100 or int(g.get_geography()) > 100:
+
             messagebox.showerror("Invalid Marks", "Please enter marks less than or equal to 100.")
-        elif int(Mth.get()) < 0 or int(Sci.get()) < 0 or int(Nep.get()) < 0 or int(Eng.get()) < 0 or int(
-                Soc.get()) < 0 or int(Com.get()) < 0 or int(EP.get()) < 0 or int(Geo.get()) < 0:
+
+
+        elif int(g.get_math()) < 0 or int(g.get_science()) < 0 or int(g.get_nepali()) < 0 or int(g.get_english()) < 0\
+                or int(g.get_social()) < 0 or int(g.get_computer()) < 0 or int(g.get_eph()) < 0 \
+                or int(g.get_geography()) < 0:
+
             messagebox.showerror("Invalid Marks", "Please enter marks greater than or equal to 0.")
+
+
         else:
-            query = "update grades set (Maths = %s, Science = %s,\
-                     Nepali= %s, English = %s, Social = %s,Computer = %s, EPH = %s, Geography = %s) where UserName = %s"
-            values = [Mth.get(),Sci.get(),Nep.get(),Eng.get(),Soc.get(),Com.get(),EP.get(),Geo.get(),record]
+            query = "replace into  grades(Maths, Science, Nepali, English, Social, Computer, EPH, Geography,UserName)\
+                     values (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+
+
+            values = [g.get_math(),g.get_science(),g.get_nepali(),g.get_english(),g.get_social(),g.get_computer(),
+                      g.get_eph(),g.get_geography(),g.get_username()]
 
             self.db.update(query,values)
 
@@ -424,7 +467,7 @@ class Admin_login():
 
     def updating_info(self):
         """Cretes new window where user's personal info such as f/l name is displayed which can be changed by admin."""
-        self.oid_num["state"] = DISABLED
+        self.usname["state"] = DISABLED
         self.info_win = Toplevel(self.root3, bg="black")
         f_name = Entry(self.info_win, font=('Verdana', 12), bg="black", fg="white", textvariable=self.f_name1)
         f_name.grid(row=1, column=1)
@@ -439,9 +482,7 @@ class Admin_login():
 
         e_add = Entry(self.info_win, font=('Verdana', 12), bg="black", fg="white", textvariable=self.e_add1)
         e_add.grid(row=6, column=1)
-        updt1 = Button(self.info_win, text="Update Info", command=lambda: self.updating_recs(f_name.get(), l_name.get(),
-                                                                                             u_name.get(), cls.get(),
-                                                                                             sec.get(), e_add.get()),
+        updt1 = Button(self.info_win, text="Update Info", command=self.updating_recs,
                        height=2, width=35)
         updt1.grid(row=7, column=0, rowspan=2, columnspan=2, padx=10)
         self.detail_label("First Name: ", 1, 0)
@@ -455,32 +496,28 @@ class Admin_login():
         Label(self.info_win, text=Text, justify=LEFT, compound=LEFT, font=10, bg="black", fg="white").grid(row=X,
                                                                                                            column=Y)
 
-    def updating_recs(self, f_name, l_name, u_name, cls, sec, e_add):
+    def updating_recs(self):
         """Updates personal info such as f/l name."""
-        conn = sqlite3.connect("Login_Data.db")
-        c = conn.cursor()
-        c.execute("""UPDATE Data SET
-                                First_Name = :f_name,
-                                Last_Name = :l_name,
-                                user_name = :u_name,
-                                Class = :cls,
-                                Section = :sec,
-                                Email_Address = :eml
+        query = """UPDATE user_info SET
+                                FName = %s,
+                                LName = %s,
+                                Class = %s,
+                                Section = %s,
+                                EAddress = %s
 
-                                WHERE oid =:oid """, {
-            "f_name": f_name,
-            "l_name": l_name,
-            "u_name": u_name,
-            "cls": cls,
-            "sec": sec,
-            "eml": e_add,
-            "oid": self.oid_num.get()
-        })
-        conn.commit()
-        conn.close()
+                                WHERE UserName = %s """
+
+
+        u = model.User.User(fname = self.f_name1.get(),lname=self.l_name1.get(),cls=self.cls1.get(),sec=self.sec1.get(),
+                            eadd=self.e_add1.get(),uname=self.user.get())
+        values = [u.get_fname(),u.get_lname(),u.get_cls(),u.get_sec(),u.get_eadd(),u.get_uname()]
+        self.db.update(query,values)
+
         messagebox.showinfo("Update", "Records Updated")
         self.info_win.destroy()
         self.query()
+
+
 
 
     def __Gmail_msg(self):
@@ -501,5 +538,11 @@ class Admin_login():
         except Exception as e:
             messagebox.showerror("Error!", str(e))
 
-tk = Tk()
-Admin_login(tk)
+    def delete_user(self):
+        query = "delete from user_info where UserName = %s"
+        u = model.User.User(uname=self.user.get())
+        value = (u.get_uname(),)
+        self.db.delete(query,value)
+        messagebox.showinfo("Success","User Record deleted")
+
+

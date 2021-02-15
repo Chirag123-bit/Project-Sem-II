@@ -1,6 +1,6 @@
 
 class User:
-    def __init__(self, fname, lname, eadd, passwd, uname, dob,cls, sec, suff):
+    def __init__(self, fname=None, lname=None, eadd=None, passwd=None, uname=None, dob=None,cls=None, sec=None, suff=None):
         self.__fname = fname
         self.__lname = lname
         self.__eadd = eadd

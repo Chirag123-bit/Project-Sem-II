@@ -12,3 +12,23 @@ CREATE TABLE 'assignment'.'new_table' (
   CONSTRAINT pk_register PRIMARY KEY ('SID'),
   UNIQUE INDEX 'UserName_UNIQUE' ('UserName' ASC) VISIBLE);
 """
+
+
+
+
+"""
+CREATE TABLE `assignment`.`grades` (
+  `UserName` VARCHAR(45) NOT NULL,
+  `Maths` INT NULL,
+  `Science` INT NULL,
+  `Nepali` INT NULL,
+  `English` INT NULL,
+  `Social` INT NULL,
+  `Computer` INT NULL,
+  `EPH` INT NULL,
+  `Geography` INT NULL,
+  `Total` INT GENERATED ALWAYS AS (Maths+Science+Nepali+English+Social+Computer+EPH+Geography) VIRTUAL,
+  `Percentage` FLOAT GENERATED ALWAYS AS (Total/8) VIRTUAL,
+  Foreign KEY (`UserName`) references user_info(UserName));
+
+"""

@@ -149,8 +149,11 @@ class Register():
                                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             values = (u.get_fname(),u.get_lname(),u.get_eadd(),u.get_passwd(),u.get_uname(),
                       u.get_dob(),u.get_cls(),u.get_sec(),u.get_suff())
-            self.db.insert(query,values)
-
+            self.db.insert(query, values)
+            query = "INSERT INTO grades(UserName, Maths,Science,Nepali,English,Social,Computer,EPH,Geography)  \
+                                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            values = (u.get_uname(),0,0,0,0,0,0,0,0)
+            self.db.insert(query, values)
 
             messagebox.showinfo("Sucess", "User Added")
             self.root2.destroy()
