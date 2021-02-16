@@ -7,5 +7,4 @@ class sorting:
                 lista[j] = lista[j - 1]
                 j -= 1
             lista[j] = save
-
         return lista

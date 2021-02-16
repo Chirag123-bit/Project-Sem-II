@@ -18,7 +18,6 @@ class Admin_login():
         Admin can also send emails through this window."""
 
     def __init__(self, root):
-        super().__init__()
         global usname, Mth, Sci, Nep, Eng, Soc, Com, EP, Geo, root3, email_add
         self.root3 = root
         self.root3.geometry("1160x750+200+0")
@@ -130,7 +129,7 @@ class Admin_login():
         self.DOB1 = StringVar()
         self.e_add1 = StringVar()
         self.txt_box["state"] = DISABLED
-        self.query()
+
 
         query = "select UserName from user_info"
         users = self.db.select(query)
@@ -156,6 +155,7 @@ class Admin_login():
                              bg="black",
                              fg="white")
         self.sort_lbl.place(x=870,y=135)
+        self.query()
 
 
         self.root3.mainloop()
@@ -267,6 +267,7 @@ class Admin_login():
     def query(self):
         """Function to show student's info in treeview for better readability and manageability."""
         global Name_list, usname_list
+        self.sort_method.set("Select a method")
         self.search.delete(0, END)
         self.frm = LabelFrame(self.root3, text="User's Details", highlightcolor="Green",
                               highlightbackground="Blue", highlightthickness=3, fg="green", bg="#ffffaa", width=561,
@@ -316,6 +317,8 @@ class Admin_login():
                                  ))
 
 
+
+
     def lables_and_entries(self, Text, X, Y, A, B, vari, col, col1):
         """Generates all labels and entries for this window"""
         self.usr_lbl1 = Label(self.lbl, text=Text, justify=LEFT, compound=LEFT, font=10, bg=col, fg=col1)
@@ -329,14 +332,14 @@ class Admin_login():
 
 
     def getrow(self, event):
-        """Get student's usname for performing database operations"""
+        """Get student's Details for performing Update/Delete operations"""
         try:
             item = self.treeview.item(self.treeview.focus())
             self.f_name1.set(item["values"][0])
             self.l_name1.set(item["values"][1])
             self.u_name1.set(item["values"][4])
-            self.cls1.set(item["values"][-2])
-            self.sec1.set(item["values"][-1])
+            self.cls1.set(item["values"][6])
+            self.sec1.set(item["values"][7])
             self.e_add1.set(item["values"][2])
             self.user.set(item["values"][4])
             self.usname["state"] = NORMAL
@@ -357,11 +360,14 @@ class Admin_login():
             index = 1
         elif chosen_option == "Class":
             index = -3
-        else:
-            messagebox.showerror("Error","Invalid option")
         query = "select * from user_info"
-        sorted_record = Backend.SearchingSorting.sorting.insertion_sort(self.db.select(query),index)
-        print(sorted_record)
+        try:
+            sorted_record = Backend.SearchingSorting.sorting.insertion_sort(self.db.select(query), index)
+            self.treeview.delete(*self.treeview.get_children())
+            for ii in sorted_record:
+                self.treeview.insert("", "end", values=ii)
+        except:
+            pass
 
     def search_lst(self):
         """Creates search window for filtering users"""
@@ -381,7 +387,6 @@ class Admin_login():
 
     def opt_call(self, *args):
         selected_user = self.selected_user.get()
-        print(selected_user)
 
         try:
             self.Percentage_label.grid_forget()
@@ -400,7 +405,7 @@ class Admin_login():
         query = "select * from grades where UserName = %s"
         value = (usename,)
         records = self.db.select(query, value)
-        print(selected_user)
+
         for marks in records:
             Mth.set(marks[1])
             Sci.set(marks[2])
@@ -439,7 +444,7 @@ class Admin_login():
         self.eml_add_lbl.delete(0, END)
         query = "select EAddress from user_info where UserName = %s"
         values = self.selected_user.get()
-        print(values)
+
         # email = self.db.select(query, str(values))
         # self.eml_add_lbl.insert(END, email)
         # self.eml_add_lbl["state"] = DISABLED
@@ -526,6 +531,7 @@ class Admin_login():
                             sec=self.sec1.get(),
                             eadd=self.e_add1.get(), uname=self.user.get())
         values = [u.get_fname(), u.get_lname(), u.get_cls(), u.get_sec(), u.get_eadd(), u.get_uname()]
+
         self.db.update(query, values)
 
         messagebox.showinfo("Update", "Records Updated")
