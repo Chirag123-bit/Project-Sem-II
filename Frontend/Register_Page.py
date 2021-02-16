@@ -5,9 +5,10 @@ from PIL import ImageTk, Image
 from tkinter import messagebox, ttk
 from tkcalendar import *
 import re
-import Frontend.main as master
+import Frontend.Login_Page as master
 import model.User
 import Backend.DBConnect
+
 
 
 class Register():
@@ -156,7 +157,7 @@ class Register():
             self.db.insert(query, values)
 
             messagebox.showinfo("Sucess", "User Added")
-            self.root2.destroy()
+            self.btn_pressed_cancle()
 
 
         elif Passwd.get() != Passwd2.get():
@@ -170,3 +171,5 @@ class Register():
             messagebox.showerror("Required Field Missing", "Please Fill all the given fields!!")
     def btn_pressed_cancle(self):
         self.root2.destroy()
+        tk = Tk()
+        master.Login(tk)

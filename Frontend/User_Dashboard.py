@@ -13,11 +13,18 @@ class user_login():
         self.root.config(bg="black")
         self.root.resizable("False", "False")
         self.usr_oid = user
+
+        self.Reg_fonts = ('Helvetica', 12)
+        self.sft_img = ImageTk.PhotoImage(Image.open("Images/softwarica.png"))  # Placing image inside label
         self.wel = LabelFrame(self.root, bg="black", highlightbackground="black", highlightcolor="black")
         self.wel.pack(side="top", fill="x")  # Creating frames which will hold college's logo
-        igm = ImageTk.PhotoImage(Image.open("Images/Student2.png"))
-        Label(self.wel, image=igm, bg="black").place(x=0, y=0)
-        Label(self.wel, image=igm, bg="black").place(x=760, y=0)
+        self.logo_img = Label(self.wel, image=self.sft_img, bg="black")
+        self.logo_img.pack(fill="both", expand=3)
+        logo_img = ImageTk.PhotoImage(Image.open("Images/Student2.png"))  # Importing logo
+        self.std_log = Label(self.wel, image=logo_img, bg="black")
+        self.std_log.place(x=0, y=0)  # Placing logo on left
+        self.std_log1 = Label(self.wel, image=logo_img, bg="black")
+        self.root.iconbitmap('Images/logo.ico')
 
         self.lbl = LabelFrame(self.root, text="Student Record", highlightcolor="Green",
                               highlightbackground="Grey", highlightthickness=3, bg="Black", fg="blue", width=561,
@@ -100,7 +107,7 @@ class user_login():
         address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=8, bg="black", fg="blue")
         address_label.place(x=335, y=80)
         rpt_crd = Label(self.root, text="Report Card", font=60, bg="black", fg="blue2")
-        rpt_crd.place(x=380, y=125)
+        rpt_crd.place(x=380, y=115)
 
         self.db = Backend.DBConnect.DBConnect()
 

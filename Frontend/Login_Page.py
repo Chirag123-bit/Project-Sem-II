@@ -16,6 +16,7 @@ import Backend.DBConnect
 
 class Login(master.TKWindow):
     """This is login window. This window will validate user's credentials and redirect them to their personal account or register new users."""
+
     def __init__(self,root):
         self.root = root
         self.root.title("Login Page")  # Setting title of first window
@@ -118,7 +119,8 @@ class Login(master.TKWindow):
         pas.grid(row=4, column=7)
 
     def button_pressed_register(self):
-        tk = Toplevel()
+        self.root.destroy()
+        tk = Tk()
         Frontend.Register_Page.Register(tk)
 
 
@@ -169,26 +171,53 @@ class Login(master.TKWindow):
         """Function to reset password. User's email address and username is required for this class"""
         global em_entr, un_entr, submt, pass_entry, record123
         self.rs_win = Toplevel(self.root)
+
         em_lbl = Label(self.rs_win, text="Enter Email Address::: ").grid(row=0, column=0)
         un_lbl = Label(self.rs_win, text="Enter User Name::: ").grid(row=1, column=0)
-        em_entr = Entry(self.rs_win, font=('Verdana', 12))
-        em_entr.grid(row=0, column=1)
-        un_entr = Entry(self.rs_win, font=('Verdana', 12))
-        un_entr.grid(row=1, column=1)
+        self.em_entr = Entry(self.rs_win, font=('Verdana', 12))
+        self.em_entr.grid(row=0, column=1)
+        self.un_entr = Entry(self.rs_win, font=('Verdana', 12))
+        self.un_entr.grid(row=1, column=1)
         sub_btn = Button(self.rs_win, text="Submit",
-                         command=lambda: Database.checking_cred(Database, em_entr.get(), un_entr.get()))
+                         command=lambda: self.check())
         sub_btn.grid(row=2, column=1)
         lebl = Label(self.rs_win, text="Enter New Password::: ")
         lebl.grid(row=3, column=0)
-        pass_entry = Entry(self.rs_win, state=DISABLED, font=('Verdana', 12))
-        pass_entry.grid(row=3, column=1)
-        submt = Button(self.rs_win, text="Update Password", state=DISABLED)
+        self.pass_entry = Entry(self.rs_win, state=DISABLED, font=('Verdana', 12))
+        self.pass_entry.grid(row=3, column=1)
+        submt = Button(self.rs_win, text="Update Password", state=DISABLED,
+                       command=self.update_pass)
         submt.grid(row=4, column=0)
+
 
 
     def check(self):
         """If verification is sucessful, reset button is enabled."""
-        pass_entry["state"] = NORMAL
-        submt["state"] = NORMAL
-        submt["command"] = lambda: Database.replce_pass(Database, pass_entry.get())
+        query = "select * from user_info where EAddress = %s and UserName = %s"
+        u = model.User.User(eadd=self.em_entr.get(), uname=self.un_entr.get())
+        values = [u.get_eadd(), u.get_uname()]
+        rec = self.db.select(query,values)
+        print(rec)
+        if rec:
+            self.pass_entry["state"] = NORMAL
+            submt["state"] = NORMAL
+
+        else:
+            messagebox.showerror("Error","Email Address or Password is wrong!")
+
+    def update_pass(self):
+        print(self.pass_entry.get())
+        u = model.User.User(passwd=self.pass_entry.get(), uname=str(self.un_entr.get()))
+        que = "update user_info set Password = %s where UserName = %s"
+        val = [u.get_passwd(), str(u.get_uname())]
+        print(u.get_passwd(),u.get_uname())
+        submt["command"] =lambda: self.db.update(que, val)
+        messagebox.showinfo("Success", "Password updated successfully")
+
+
+
+
+
+
+
 
