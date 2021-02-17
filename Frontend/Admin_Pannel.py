@@ -68,12 +68,18 @@ class Admin_login():
         self.address_label.place(x=469, y=80)
         self.oousname = Label(self.root3, text="Student's usname::", font=15, bg="black", fg="white")
         self.oousname.place(x=765, y=560)
-        self.search = Entry(self.root3, font=self.Reg_fonts)
+        self.search = Entry(self.root3, font=self.Reg_fonts, state=DISABLED)
         self.search.place(x=610, y=460, height=30)
-        ttk.Button(self.root3, text="Search", command=self.search_lst).place(x=800, y=460, width=200, height=30)
+        ttk.Button(self.root3, text="Search", command=self.search_user).place(x=800, y=460, width=200, height=30)
         ttk.Button(self.root3, text="Reset", command=self.query).place(x=1010, y=460, width=150, height=30)
-        self.eee = Label(self.root3, text="F/L Name", bg="black", fg="white", font=10)
-        self.eee.place(x=515, y=462)
+
+        self.selected_search_method = StringVar()
+        self.selected_search_method.set("Select a Column")
+        methods = ["First Name", "Last Name"]
+        self.opt2 = OptionMenu(self.root3, self.selected_search_method, *methods)
+        self.opt2.config(width=16, font=('Verdana', 10))
+        self.selected_search_method.trace("w", self.get_search_item)
+        self.opt2.place(x=430, y=460)
 
         self.usname = ttk.Entry(self.root3, font=self.Reg_fonts)
         self.usname.insert(0, "Double tap on names above")
@@ -164,6 +170,11 @@ class Admin_login():
         self.root3.destroy()
         tk = Tk()
         Frontend.Login_Page.Login(tk)
+
+    def get_search_item(self,*args):
+        self.search.configure(state = NORMAL)
+
+
 
     def dark_mode(self):
         """Function for enabling dark mode"""
@@ -315,7 +326,7 @@ class Admin_login():
                                      record[7]
 
                                  ))
-
+        self.search.configure(state = DISABLED)
 
 
 
@@ -369,25 +380,31 @@ class Admin_login():
         except:
             pass
 
-    def search_lst(self):
-        """Creates search window for filtering users"""
 
-        value = [self.search.get(), self.search.get(), self.search.get(), self.search.get()]
-        query = "select * from user_info where FName like %s or LName like %s or Class like %s or Section like %s"
-        rows = self.db.select(query, value)
+    def search_user(self,*args):
+        global index
+        method = self.selected_search_method.get()
+        query = "select * from user_info"
+        lists = self.db.select(query)
+        if method == "First Name":
+            index = 0
+        elif method == "Last Name":
+            index = 1
+        search_object = Backend.SearchingSorting.searching()
+        user = search_object.binary_search(lists,index,self.search.get())
+        self.treeview.delete(*self.treeview.get_children())
+        if user:
+            self.treeview.insert("", "end", values=user)
 
-        if rows:
-            self.treeview.delete(*self.treeview.get_children())
-            for ii in rows:
-                self.treeview.insert("", "end", values=ii)
         else:
             messagebox.showinfo("User Not Found",
-                                "No student with First/Last name " + value[0] + " or Class/Section " + value[0] +
-                                " found in our records")
+                                "No student with First/Last name " + self.search.get() + " found in our records")
+
+
+
+
 
     def opt_call(self, *args):
-        selected_user = self.selected_user.get()
-
         try:
             self.Percentage_label.grid_forget()
         except:
@@ -442,17 +459,12 @@ class Admin_login():
         self.Percentage_label.grid(row=5, column=2, rowspan=2)
         self.eml_add_lbl["state"] = NORMAL
         self.eml_add_lbl.delete(0, END)
-        query = "select EAddress from user_info where UserName = %s"
-        values = self.selected_user.get()
+        query = "select EAddress from user_info where UserName =%s "
+        values = (self.selected_user.get(),)
+        email = self.db.select(query,values)
+        self.eml_add_lbl.insert(END, email)
+        self.eml_add_lbl["state"] = DISABLED
 
-        # email = self.db.select(query, str(values))
-        # self.eml_add_lbl.insert(END, email)
-        # self.eml_add_lbl["state"] = DISABLED
-
-    def refresh(self):
-        # To refresh treeview frame after updating entries
-        root3.destroy()
-        Admin_login()
 
     def updating_values(self, record):
         """To update student's marks"""
@@ -562,7 +574,6 @@ class Admin_login():
         value = (u.get_uname(),)
         self.db.delete(query, value)
         messagebox.showinfo("Success", "User Record deleted")
+        self.query()
 
 
-tk = Tk()
-Admin_login(tk)
