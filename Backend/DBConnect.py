@@ -6,7 +6,6 @@ class DBConnect:
             self.con = mysql.connector.connect(host="localhost", user="root", password="123456789",
                                                database="assignment")
             self.cur = self.con.cursor()
-            print('Sucess')
 
         except mysql.connector.Error as e:
             print(f"Unable to connect {e}")

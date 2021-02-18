@@ -14,10 +14,10 @@ import Backend.DBConnect
 
 
 
-class Login(master.TKWindow):
+class Login():
     """This is login window. This window will validate user's credentials and redirect them to their personal account or register new users."""
 
-    def __init__(self,root):
+    def __init__(self, root):
         self.root = root
         self.root.title("Login Page")  # Setting title of first window
         self.root.geometry("1067x600+230+40")  # Defining screen size of our app
@@ -206,12 +206,10 @@ class Login(master.TKWindow):
             messagebox.showerror("Error","Email Address or Password is wrong!")
 
     def update_pass(self):
-        print(self.pass_entry.get())
         u = model.User.User(passwd=self.pass_entry.get(), uname=str(self.un_entr.get()))
         que = "update user_info set Password = %s where UserName = %s"
         val = [u.get_passwd(), str(u.get_uname())]
-        print(u.get_passwd(),u.get_uname())
-        submt["command"] =lambda: self.db.update(que, val)
+        submt["command"] = self.db.update(que, val)
         messagebox.showinfo("Success", "Password updated successfully")
 
 

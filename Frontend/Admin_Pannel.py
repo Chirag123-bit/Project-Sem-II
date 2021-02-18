@@ -9,6 +9,7 @@ import Backend.DBConnect
 import model.Grades
 import model.User
 import Backend.SearchingSorting
+import os
 
 
 class Admin_login():
@@ -414,7 +415,7 @@ class Admin_login():
 
     def showing_values_in_entries(self):
         """Function to show marks of selected users in respective entry boxes."""
-        global Total, email_add
+        global Total
         selected_user = self.selected_user.get()
         self.txt_box["state"] = NORMAL
         self.send_btn["state"] = NORMAL
@@ -461,8 +462,8 @@ class Admin_login():
         self.eml_add_lbl.delete(0, END)
         query = "select EAddress from user_info where UserName =%s "
         values = (self.selected_user.get(),)
-        email = self.db.select(query,values)
-        self.eml_add_lbl.insert(END, email)
+        self.email = self.db.select(query,values)
+        self.eml_add_lbl.insert(END, self.email)
         self.eml_add_lbl["state"] = DISABLED
 
 
@@ -554,18 +555,19 @@ class Admin_login():
         """Sends email to the selected users."""
         try:
             with smtplib.SMTP_SSL("smtp.gmail.com", 465)as smtp:
-                Email_address = self.__useremail
-                Email_pass = self.__userpass
+                Email_address = os.environ.get("UserEmail")
+                Email_pass = os.environ.get("UserPassword")
                 msg = EmailMessage()
                 msg["Subject"] = "Academic Records Updated!!"
                 msg["From"] = Email_address
-                msg["To"] = email_add
+                msg["To"] = self.email[0][0]
                 msg.set_content(self.txt_box.get(1.0, END))
                 smtp.login(Email_address, Email_pass)
                 smtp.send_message(msg)
                 messagebox.showinfo("Sucess", "Message Sent!")
 
         except Exception as e:
+            print(e)
             messagebox.showerror("Error!", str(e))
 
     def delete_user(self):
