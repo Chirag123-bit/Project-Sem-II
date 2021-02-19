@@ -68,14 +68,14 @@ class Admin_login():
         self.address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=10, bg="black", fg="white")
         self.address_label.place(x=469, y=80)
         self.oousname = Label(self.root3, text="Student's usname::", font=15, bg="black", fg="white")
-        self.oousname.place(x=765, y=560)
+        self.oousname.place(x=750, y=556)
         self.search = Entry(self.root3, font=self.Reg_fonts, state=DISABLED)
         self.search.place(x=610, y=460, height=30)
         ttk.Button(self.root3, text="Search", command=self.search_user).place(x=800, y=460, width=200, height=30)
         ttk.Button(self.root3, text="Reset", command=self.query).place(x=1010, y=460, width=150, height=30)
 
         self.selected_search_method = StringVar()
-        self.selected_search_method.set("Select a Column")
+        self.selected_search_method.set("Search By")
         methods = ["First Name", "Last Name"]
         self.opt2 = OptionMenu(self.root3, self.selected_search_method, *methods)
         self.opt2.config(width=16, font=('Verdana', 10))
@@ -111,7 +111,7 @@ class Admin_login():
         self.lables_and_entries("Geography", 8, 0, 8, 1, Geo, "black", "white")
 
         ttk.Button(self.root3, text="Update Marks",
-                   command=lambda: self.updating_values(str(self.selected_user.get()))).place(x=180, y=462, width=200,
+                   command=lambda: self.updating_values(str(self.selected_user.get()))).place(x=170, y=462, width=200,
                                                                                               height=43)
         self.updt1 = ttk.Button(self.root3, text="Update Info", command=self.updating_info, state=DISABLED)
         self.updt1.place(x=750, y=585, width=200, height=50)
@@ -122,7 +122,7 @@ class Admin_login():
         to_lbl = Label(self.msg_frm, text="To: ", font=('Verdana', 12), anchor=E).grid(row=0, column=0, sticky=W)
         self.eml_add_lbl = Entry(self.msg_frm, font=('Verdana', 12), state=DISABLED, justify=LEFT, width=25)
         self.eml_add_lbl.grid(row=0, column=1, sticky=SW)
-        self.txt_box = Text(self.msg_frm, height=13, width=40, bg="black", fg="chartreuse2")
+        self.txt_box = Text(self.msg_frm, height=13, width=40, bg="black", fg="orange")
         self.txt_box.grid(row=1, column=0, columnspan=2)
         mssg = open("Default_message", "r")
         self.txt_box.insert(END, mssg.read())
@@ -196,14 +196,15 @@ class Admin_login():
         self.std_log1.place(x=1050, y=0)
         self.address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=10, bg="black", fg="white")
         self.address_label.place(x=469, y=80)
+        self.oousname(bg="black",fg="white")
 
         self.usr_ent.config(bg="black", fg="white")
         self.usr_lbl1.config(bg="black", fg="white")
         self.welcome.config(bg="black", fg="white")
         self.search.config(bg="white", fg="black", font=15)
-        self.eee.config(bg="black", fg="white")
+        self.sort_lbl.config(bg="black", fg="white")
         self.oousname.config(bg="black", fg="white")
-        self.txt_box.config(bg="black", fg="chartreuse2")
+        self.txt_box.config(bg="black", fg="orange")
 
         self.lables_and_entries("Math", 1, 0, 1, 1, Mth, "black", "white")
         self.lables_and_entries("Science", 2, 0, 2, 1, Sci, "black", "white")
@@ -216,6 +217,7 @@ class Admin_login():
 
         self.lbl2.config(bg="black", fg="white")
         self.usr_lbl.config(bg="black", fg="white")
+        self.sort_lbl.config(bg="black",fg="white")
         try:
             self.lbl2.grid_forget()
             self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6)
@@ -238,7 +240,7 @@ class Admin_login():
         self.usr_lbl1.config(bg="azure2", fg="black")
         self.welcome.config(bg="seashell", fg="black")
         self.search.config(bg="light yellow", fg="orange2", font=15)
-        self.eee.config(bg="white", fg="black")
+        self.sort_lbl.config(bg="white", fg="black")
         self.oousname.config(bg="white", fg="black")
         self.wel.destroy()
         self.wel = LabelFrame(self.root3, bg="snow", highlightbackground="snow", highlightcolor="snow")
@@ -252,6 +254,8 @@ class Admin_login():
         std_log111.place(x=1050, y=0)
         self.address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=10, bg="snow", fg="blue")
         self.address_label.place(x=469, y=78)
+        self.sort_lbl.config(bg="seashell",fg="black")
+        self.oousname.config(bg="seashell",fg="black")
 
         self.lables_and_entries("Math", 1, 0, 1, 1, Mth, "azure2", "black")
         self.lables_and_entries("Science", 2, 0, 2, 1, Sci, "azure2", "black")
