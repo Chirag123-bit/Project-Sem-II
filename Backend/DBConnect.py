@@ -1,5 +1,7 @@
 import mysql.connector
 import mysql.connector.errors
+
+
 class DBConnect:
     def __init__(self):
         try:
@@ -10,27 +12,27 @@ class DBConnect:
         except mysql.connector.Error as e:
             print(f"Unable to connect {e}")
 
-
-
-    def insert(self,query,values):
-        self.cur.execute(query,values)
+    def insert(self, query, values):
+        if type(query) is not str:
+            raise TypeError("plz provide string ")
+        self.cur.execute(query, values)
         self.con.commit()
 
-    def select(self,query,values = None):
+    def select(self, query, values=None):
         self.cur.execute(query, values)
         rows = self.cur.fetchall()
         return rows
 
-    def update(self,query,values):
+    def update(self, query, values):
         self.cur.execute(query, values)
         self.con.commit()
 
-    def delete(self,query,value):
-        self.cur.execute(query,value)
+    def delete(self, query, value):
+        self.cur.execute(query, value)
         self.con.commit()
 
-
-
-
-
-DBConnect()
+    def __del__(self):
+        if self.cur:
+            self.cur.close()
+        if self.con:
+            self.con.close()

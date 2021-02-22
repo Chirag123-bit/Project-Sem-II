@@ -1,5 +1,5 @@
 class sorting:
-    def insertion_sort(lista, index):
+    def insertion_sort(self, lista, index):
         for i in range(1, len(lista)):  # For Traversing through list
             save = lista[i]  # Copying a element to a variable
             j = i  # For getting element smaller than our current index
@@ -7,7 +7,7 @@ class sorting:
                 lista[j] = lista[j - 1]  # Changing variable03 value if element is small
                 j -= 1
             lista[j] = save  # Swapping values
-        return lista
+        return lista  # return sorted list
 
 
 class searching:
