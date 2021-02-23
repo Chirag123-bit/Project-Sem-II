@@ -37,6 +37,8 @@ class User:
         return self.__uname
 
     def set_dob(self,dob):
+        if type(dob) is not str:
+            raise TypeError
         self.__dob = dob
     def get_dob(self):
         return self.__dob

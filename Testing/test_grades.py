@@ -32,3 +32,11 @@ class Test_Grades(unittest.TestCase):
         self.assertRaises(ValueError,self.g.set_geography, 1110)  # Test Passed
         self.assertRaises(TypeError, self.g.set_geography, 11)  # Test Failed
         self.assertRaises(ValueError, self.g.set_geography, 100)  # Test Failed
+
+
+    def test_set_computer(self):
+        self.assertRaises(TypeError,self.g.set_computer,"100")  # Test Passed
+        self.assertRaises(ValueError,self.g.set_computer, 101)  # Test Passed
+        self.assertRaises(TypeError, self.g.set_computer, 100)  # Test Failed
+        self.assertRaises(ValueError, self.g.set_computer, 0)  # Test Failed
+

@@ -14,7 +14,7 @@ class Grades:
     def set_math(self, Math):
         if type(Math) is not int:
             raise TypeError
-        elif 100 <= Math >= 0:
+        elif 100 < Math > 0:
             raise ValueError
         else:
             self.__math = Math
@@ -25,7 +25,7 @@ class Grades:
     def set_science(self, Science):
         if type(Science) is not int:
             raise TypeError
-        elif 100 <= Science >= 0:
+        elif 100 < Science > 0:
             raise ValueError
         else:
             self.__science = Science
@@ -36,7 +36,7 @@ class Grades:
     def set_nepali(self, Nepali):
         if type(Nepali) is not int:
             raise TypeError
-        elif 100 <= Nepali >= 0:
+        elif 100 < Nepali > 0:
             raise ValueError
         else:
             self.__nepali = Nepali
@@ -47,7 +47,7 @@ class Grades:
     def set_english(self, English):
         if type(English) is not int:
             raise TypeError
-        elif 100 <= English >= 0:
+        elif 100 < English > 0:
             raise ValueError
         else:
             self.__english = English
@@ -58,7 +58,7 @@ class Grades:
     def set_social(self, Social):
         if type(Social) is not int:
             raise TypeError
-        elif 100 <= Social >= 0:
+        elif 100 < Social > 0:
             raise ValueError
         else:
             self.__social = Social
@@ -69,7 +69,7 @@ class Grades:
     def set_computer(self, Computer):
         if type(Computer) is not int:
             raise TypeError
-        elif 100 <= Computer >= 0:
+        elif 100 < Computer > 0:
             raise ValueError
         else:
             self.__computer = Computer
@@ -80,7 +80,7 @@ class Grades:
     def set_eph(self, EPH):
         if type(EPH) is not int:
             raise TypeError
-        elif 100 <= EPH >= 0:
+        elif 100 < EPH > 0:
             raise ValueError
         else:
             self.__eph = EPH
@@ -91,7 +91,7 @@ class Grades:
     def set_geography(self, Geography):
         if type(Geography) is not int:
             raise TypeError
-        elif 100 <= Geography >= 0:
+        elif 100 < Geography > 0:
             raise ValueError
         else:
             self.__geography = Geography

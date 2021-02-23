@@ -67,7 +67,7 @@ class Admin_login():
         self.welcome.place(x=390, y=120)
         self.address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=10, bg="black", fg="white")
         self.address_label.place(x=469, y=80)
-        self.oousname = Label(self.root3, text="Student's usname::", font=15, bg="black", fg="white")
+        self.oousname = Label(self.root3, text="Student's UserName", font=15, bg="black", fg="white")
         self.oousname.place(x=750, y=556)
         self.search = Entry(self.root3, font=self.Reg_fonts, state=DISABLED)
         self.search.place(x=610, y=460, height=30)
@@ -89,17 +89,17 @@ class Admin_login():
         self.std_log1.place(x=1050, y=0)
 
         self.lbl = LabelFrame(self.root3, text="Student Record", highlightcolor="Green",
-                              highlightbackground="Grey", highlightthickness=3, bg="Black", fg="gold", height=287,
+                              highlightbackground="Grey", highlightthickness=3, bg="Black", fg="gold", height=300,
                               width=310)
-        self.lbl.place(x=0, y=170)
-        self.lbl.pack_propagate(False)
+        self.lbl.place(x=10, y=175)
+        self.lbl.pack_propagate(True)
 
         Mth, Sci, Nep, Eng, Soc, Com, EP, Geo = StringVar(""), StringVar(""), StringVar(""), StringVar(""), StringVar(
             ""), StringVar(""), StringVar(""), StringVar("")
         self.lbl2 = LabelFrame(self.lbl, highlightcolor="Red",
                                highlightbackground="grey", highlightthickness=3, bg="black", fg="green")
 
-        self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6)
+        self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6,padx=(50, 50))
 
         self.lables_and_entries("Math", 1, 0, 1, 1, Mth, "black", "white")
         self.lables_and_entries("Science", 2, 0, 2, 1, Sci, "black", "white")
@@ -111,7 +111,7 @@ class Admin_login():
         self.lables_and_entries("Geography", 8, 0, 8, 1, Geo, "black", "white")
 
         ttk.Button(self.root3, text="Update Marks",
-                   command=lambda: self.updating_values(str(self.selected_user.get()))).place(x=170, y=462, width=200,
+                   command=lambda: self.updating_values(str(self.selected_user.get()))).place(x=170, y=455, width=200,
                                                                                               height=43)
         self.updt1 = ttk.Button(self.root3, text="Update Info", command=self.updating_info, state=DISABLED)
         self.updt1.place(x=750, y=585, width=200, height=50)
@@ -196,7 +196,7 @@ class Admin_login():
         self.std_log1.place(x=1050, y=0)
         self.address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=10, bg="black", fg="white")
         self.address_label.place(x=469, y=80)
-        self.oousname(bg="black",fg="white")
+        self.oousname.config(bg="black",fg="white")
 
         self.usr_ent.config(bg="black", fg="white")
         self.usr_lbl1.config(bg="black", fg="white")
@@ -220,7 +220,7 @@ class Admin_login():
         self.sort_lbl.config(bg="black",fg="white")
         try:
             self.lbl2.grid_forget()
-            self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6)
+            self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=8,padx=(50, 50))
             self.Percentage_label.grid_forget()
             self.Percentage_label.grid(row=5, column=2, rowspan=2)
             self.total_label.config(bg="black", fg="white")
@@ -270,7 +270,7 @@ class Admin_login():
         self.usr_lbl.config(bg="azure2", fg="black")
         try:  # If user selects this mode before percentage label is created, this will generate an error. To prevent this error handling is used.
             self.lbl2.grid_forget()
-            self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6)
+            self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6,padx=(50, 50))
             self.Percentage_label.grid_forget()
             self.Percentage_label.grid(row=5, column=2, rowspan=2)
             self.total_label.config(bg="snow", fg="black")
@@ -284,6 +284,7 @@ class Admin_login():
         """Function to show student's info in treeview for better readability and manageability."""
         global Name_list, usname_list
         self.sort_method.set("Select a method")
+        self.selected_search_method.set("Search By")
         self.search.delete(0, END)
         self.frm = LabelFrame(self.root3, text="User's Details", highlightcolor="Green",
                               highlightbackground="Blue", highlightthickness=3, fg="green", bg="#ffffaa", width=561,
@@ -378,7 +379,8 @@ class Admin_login():
             index = -3
         query = "select * from user_info"
         try:
-            sorted_record = Backend.SearchingSorting.sorting.insertion_sort(self.db.select(query), index)
+            sorted_record = Backend.SearchingSorting.sorting.insertion_sort(Backend.SearchingSorting.searching,
+                                                                            self.db.select(query), index)
             self.treeview.delete(*self.treeview.get_children())
             for ii in sorted_record:
                 self.treeview.insert("", "end", values=ii)
@@ -396,10 +398,11 @@ class Admin_login():
         elif method == "Last Name":
             index = 1
         search_object = Backend.SearchingSorting.searching()
-        user = search_object.binary_search(lists,index,self.search.get())
+        user = search_object.linear_search(lists,index,self.search.get())
         self.treeview.delete(*self.treeview.get_children())
         if user:
-            self.treeview.insert("", "end", values=user)
+            for ii in user:
+                self.treeview.insert("", "end", values=ii)
 
         else:
             messagebox.showinfo("User Not Found",
@@ -419,7 +422,7 @@ class Admin_login():
 
     def showing_values_in_entries(self):
         """Function to show marks of selected users in respective entry boxes."""
-        global Total
+        global Total, marks
         selected_user = self.selected_user.get()
         self.txt_box["state"] = NORMAL
         self.send_btn["state"] = NORMAL
@@ -448,7 +451,7 @@ class Admin_login():
                           fg=self.col[1])
         self.pert.grid(row=4, column=2)
         self.Percentage_label = Label(self.lbl2, text=(str(Total / 8)), justify=LEFT, compound=LEFT,
-                                      padx=0, font=10, bg=self.col[0], fg=self.col[1])
+                                      padx=0, font=30, bg=self.col[0], fg=self.col[1])
         if (Total / 8) >= 80 and (Total / 8) <= 100:
             self.Percentage_label["fg"] = "green"
         elif (Total / 8) >= 60 and (Total / 8) < 80:

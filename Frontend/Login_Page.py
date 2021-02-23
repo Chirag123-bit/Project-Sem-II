@@ -141,7 +141,7 @@ class Login():
             query = ("SELECT * FROM user_info WHERE UserName = %s AND Password =%s ")
             values = [u.get_uname(),u.get_passwd()]
             records = self.db.select(query,values)
-            print(records)
+
 
             if records:
                 for i in records:
@@ -197,7 +197,6 @@ class Login():
         u = model.User.User(eadd=self.em_entr.get(), uname=self.un_entr.get())
         values = [u.get_eadd(), u.get_uname()]
         rec = self.db.select(query,values)
-        print(rec)
         if rec:
             self.pass_entry["state"] = NORMAL
             submt["state"] = NORMAL

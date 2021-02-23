@@ -19,15 +19,22 @@ class DBConnect:
         self.con.commit()
 
     def select(self, query, values=None):
+        if type(query) is not str:
+            raise TypeError("plz provide string ")
         self.cur.execute(query, values)
         rows = self.cur.fetchall()
         return rows
 
     def update(self, query, values):
+        if type(query) is not str:
+            raise TypeError("plz provide string ")
         self.cur.execute(query, values)
         self.con.commit()
 
+
     def delete(self, query, value):
+        if type(query) is not str:
+            raise TypeError("plz provide string ")
         self.cur.execute(query, value)
         self.con.commit()
 

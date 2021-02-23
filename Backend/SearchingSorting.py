@@ -11,16 +11,10 @@ class sorting:
 
 
 class searching:
-    def binary_search(self, list, index, item):
-        sorted_list = sorting.insertion_sort(list, index)
-        min = 0
-        max = len(sorted_list) - 1
-        while min <= max:
-            mid = (min + max) // 2
-            if sorted_list[mid][index] == item:
-                return sorted_list[mid]
-            elif list[mid][index] > item:
-                max = mid - 1
-            else:
-                min = mid + 1
-        return
+    def linear_search(self, list, index, item):
+        search_result = []
+        for i in list:
+            if i[index] == item:
+                search_result.append(i)
+        return search_result
+
