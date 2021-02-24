@@ -28,3 +28,6 @@ class Test_User(unittest.TestCase):
         self.assertRaises(TypeError, self.u.set_dob, 2010)  # Test Passed
         self.u.set_dob("2010-01-01")
         self.assertEqual("2010-01-01", self.u.get_dob()) #Test Passed
+
+    def tearDown(self):
+        del self.u

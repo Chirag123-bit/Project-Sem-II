@@ -4,7 +4,7 @@ class sorting:
             save = lista[i]  # Copying a element to a variable
             j = i  # For getting element smaller than our current index
             while j > 0 and lista[j - 1][index] > save[index]:  # For comparing values
-                lista[j] = lista[j - 1]  # Changing variable03 value if element is small
+                lista[j] = lista[j - 1]  # Changing variable value if element is small
                 j -= 1
             lista[j] = save  # Swapping values
         return lista  # return sorted list

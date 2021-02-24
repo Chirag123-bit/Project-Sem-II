@@ -10,7 +10,7 @@ class Test_DBConnect(unittest.TestCase):
         row = self.db.select(query)
         self.assertIsNotNone(row) #Test Passed
 
-        query2 = "select fname from user_info"
+        query2 = "select * from grades"
         row = self.db.select(query2)
         self.assertIsNotNone(row)  # Test Passed
 
@@ -28,6 +28,10 @@ class Test_DBConnect(unittest.TestCase):
         query = 10
         values = ["Chirag"]
         self.assertRaises(TypeError,self.db.delete,query,values)  # Test Passed
+
+
+    def tearDown(self):
+        del self.db
 
 
 

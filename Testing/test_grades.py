@@ -10,10 +10,8 @@ class Test_Grades(unittest.TestCase):
         self.assertEqual(100,self.g.get_math())  # Test Passed
         self.g.set_math(90)
         self.assertEqual(90, self.g.get_math())  # Test Passed
-        self.g.set_math(900)
-        self.assertEqual(900, self.g.get_math())  # Test Failed
-        self.g.set_math("100")
-        self.assertEqual("100", self.g.get_math())  # Test Failed
+        self.assertRaises(ValueError,self.g.set_math, 900)  # Test Passed
+        self.assertRaises(TypeError,self.g.set_math, "100")  # Test Passed
 
 
     def test_set_science(self):
@@ -21,22 +19,26 @@ class Test_Grades(unittest.TestCase):
         self.assertEqual(50,self.g.get_science())  # Test Passed
         self.g.set_science(10)
         self.assertEqual(10, self.g.get_science())  # Test Passed
-        self.g.set_science("10")
-        self.assertEqual("10", self.g.get_science())  # Test Failed
-        self.g.set_science(110)
-        self.assertEqual(110, self.g.get_science())  # Test Failed
+        self.assertRaises(ValueError, self.g.set_science, 900)  # Test Passed
+        self.assertRaises(TypeError, self.g.set_science, "100")  # Test Passed
 
 
     def test_set_geography(self):
+        self.g.set_geography(100)
+        self.assertEqual(100, self.g.get_geography())  # Test Passed
+        self.g.set_geography(90)
+        self.assertEqual(90, self.g.get_geography())  # Test Passed
         self.assertRaises(TypeError,self.g.set_geography,"11")  # Test Passed
         self.assertRaises(ValueError,self.g.set_geography, 1110)  # Test Passed
-        self.assertRaises(TypeError, self.g.set_geography, 11)  # Test Failed
-        self.assertRaises(ValueError, self.g.set_geography, 100)  # Test Failed
 
 
     def test_set_computer(self):
+        self.g.set_computer(100)
+        self.assertEqual(100, self.g.get_computer())  # Test Passed
+        self.g.set_computer(90)
+        self.assertEqual(90, self.g.get_computer())  # Test Passed
         self.assertRaises(TypeError,self.g.set_computer,"100")  # Test Passed
         self.assertRaises(ValueError,self.g.set_computer, 101)  # Test Passed
-        self.assertRaises(TypeError, self.g.set_computer, 100)  # Test Failed
-        self.assertRaises(ValueError, self.g.set_computer, 0)  # Test Failed
 
+    def tearDown(self):
+        del self.g

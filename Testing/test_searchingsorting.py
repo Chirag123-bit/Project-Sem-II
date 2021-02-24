@@ -6,30 +6,25 @@ class Test_Grades(unittest.TestCase):
     def setUp(self):
         self.s = Backend.SearchingSorting.sorting()
         self.so = Backend.SearchingSorting.searching()
+        self.lst = [('Tshering', 'Bcd'), ("Bimal", "Def"), ('Chirag', 'Abc')]
 
     def test_linear_search(self):
-        lst = [('Tshering', 'Rai', 'abc@gmail.com', '123', '123'),
-               ('Chirag', 'Simkhada', 'chiragsimkhada@gmail.com', '123', 'Chirag')]
         index = 0
         item = "Chirag"
         expected_result = "Chirag"
-        result = self.so.linear_search(lst, index, item)
+        result = self.so.linear_search(self.lst, index, item)
         actual_result = result[0][0]  # index 0 = First Name
         self.assertEqual(expected_result, actual_result)  # Test Passed
 
     def test_insertion_sort(self):
-        lst = [('Tshering', 'Rai', 'abc@gmail.com', '123', '123'),
-               ('Chirag', 'Simkhada', 'chiragsimkhada@gmail.com', '123', 'Chirag')]
-
-        expected_result = [('Chirag', 'Simkhada', 'chiragsimkhada@gmail.com', '123', 'Chirag'),
-                           ('Tshering', 'Rai', 'abc@gmail.com', '123', '123')]
-        actual_result = self.s.insertion_sort(lst, 0)  # Sorting using First Name
+        expected_result = [("Bimal", "Def"), ('Chirag', 'Abc'), ('Tshering', 'Bcd')]
+        actual_result = self.s.insertion_sort(self.lst, 0)  # Sorting using First Name
         self.assertEqual(expected_result, actual_result)  # Test Passed
 
-        lst = [('Tshering', 'Zai', 'abc@gmail.com', '123', '123'),
-               ('Chirag', 'Simkhada', 'chiragsimkhada@gmail.com', '123', 'Chirag')]
-
-        expected_result = [('Chirag', 'Simkhada', 'chiragsimkhada@gmail.com', '123', 'Chirag'),
-                           ('Tshering', 'Zai', 'abc@gmail.com', '123', '123')]
-        actual_result = self.s.insertion_sort(lst, 1)  # Sorting using Last Name
+        expected_result = [('Chirag', 'Abc'), ('Tshering', 'Bcd'),("Bimal", "Def")]
+        actual_result = self.s.insertion_sort(self.lst, 1)  # Sorting using Last Name
         self.assertEqual(expected_result, actual_result)  # Test Passed
+
+    def tearDown(self):
+        del self.s
+        del self.so
