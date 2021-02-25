@@ -3,6 +3,10 @@ import model.User
 
 
 class Test_User(unittest.TestCase):
+    """This class will perform unit testing on user module.
+        Through this class, it is ensured that our program is able
+        to perform all CURD operations and filter any unwanted queries"""
+
     def setUp(self):
         self.u = model.User.User()
 
@@ -27,7 +31,7 @@ class Test_User(unittest.TestCase):
     def test_set_dob(self):
         self.assertRaises(TypeError, self.u.set_dob, 2010)  # Test Passed
         self.u.set_dob("2010-01-01")
-        self.assertEqual("2010-01-01", self.u.get_dob()) #Test Passed
+        self.assertEqual("2010-01-01", self.u.get_dob())  # Test Passed
 
     def tearDown(self):
         del self.u

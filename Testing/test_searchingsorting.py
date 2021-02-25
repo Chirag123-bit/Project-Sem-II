@@ -3,6 +3,9 @@ import Backend.SearchingSorting
 
 
 class Test_Grades(unittest.TestCase):
+    """This class will perform unit testing on SearchingSorting module.
+        Through this class, it is ensured that our program is able
+        to perform all searching and soring operations"""
     def setUp(self):
         self.s = Backend.SearchingSorting.sorting()
         self.so = Backend.SearchingSorting.searching()

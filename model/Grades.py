@@ -1,4 +1,9 @@
 class Grades:
+    """This class serves as an extra layer of protection for oor data.
+    All data which is required to be passed into database is firstly converted into private datatype and then
+    it is passed as values. This ensures that middleman is not able to take a peak into the data when its travelling
+    into our database."""
+
     def __init__(self, Math=None, Science=None, Nepali=None, English=None, Social=None, Computer=None, EPH=None,
                  Geography=None, UserName=None):
         self.__math = Math

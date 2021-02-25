@@ -67,8 +67,8 @@ class Admin_login():
         self.welcome.place(x=390, y=120)
         self.address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=10, bg="black", fg="white")
         self.address_label.place(x=469, y=80)
-        self.oousname = Label(self.root3, text="Student's UserName", font=15, bg="black", fg="white")
-        self.oousname.place(x=750, y=556)
+        self.oousname = Label(self.root3, text="Student's UserName", font=12, bg="black", fg="white")
+        self.oousname.place(x=736, y=556)
         self.search = Entry(self.root3, font=self.Reg_fonts, state=DISABLED)
         self.search.place(x=610, y=460, height=30)
         ttk.Button(self.root3, text="Search", command=self.search_user).place(x=800, y=460, width=200, height=30)
@@ -91,15 +91,15 @@ class Admin_login():
         self.lbl = LabelFrame(self.root3, text="Student Record", highlightcolor="Green",
                               highlightbackground="Grey", highlightthickness=3, bg="Black", fg="gold", height=300,
                               width=310)
-        self.lbl.place(x=10, y=175)
-        self.lbl.pack_propagate(True)
+        self.lbl.place(x=0, y=169)
+        self.lbl.pack_propagate(False)
 
         Mth, Sci, Nep, Eng, Soc, Com, EP, Geo = StringVar(""), StringVar(""), StringVar(""), StringVar(""), StringVar(
             ""), StringVar(""), StringVar(""), StringVar("")
         self.lbl2 = LabelFrame(self.lbl, highlightcolor="Red",
                                highlightbackground="grey", highlightthickness=3, bg="black", fg="green")
 
-        self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6,padx=(50, 50))
+        self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6,padx=(20, 20))
 
         self.lables_and_entries("Math", 1, 0, 1, 1, Mth, "black", "white")
         self.lables_and_entries("Science", 2, 0, 2, 1, Sci, "black", "white")
@@ -111,8 +111,8 @@ class Admin_login():
         self.lables_and_entries("Geography", 8, 0, 8, 1, Geo, "black", "white")
 
         ttk.Button(self.root3, text="Update Marks",
-                   command=lambda: self.updating_values(str(self.selected_user.get()))).place(x=170, y=455, width=200,
-                                                                                              height=43)
+                   command=lambda: self.updating_values(str(self.selected_user.get()))).place(x=160, y=462, width=200,
+                                                                                              height=40)
         self.updt1 = ttk.Button(self.root3, text="Update Info", command=self.updating_info, state=DISABLED)
         self.updt1.place(x=750, y=585, width=200, height=50)
         self.send_btn = ttk.Button(self.root3, text="Send E-mail", command=self.__Gmail_msg, state=DISABLED)
@@ -168,11 +168,13 @@ class Admin_login():
         self.root3.mainloop()
 
     def ext(self):
+        """Function for exiting Admin Panel and returning to login page"""
         self.root3.destroy()
         tk = Tk()
         Frontend.Login_Page.Login(tk)
 
     def get_search_item(self,*args):
+        """A mediator function which enables search entry box when search mode is chosen"""
         self.search.configure(state = NORMAL)
 
 
@@ -220,7 +222,7 @@ class Admin_login():
         self.sort_lbl.config(bg="black",fg="white")
         try:
             self.lbl2.grid_forget()
-            self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=8,padx=(50, 50))
+            self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6,padx=(20, 20))
             self.Percentage_label.grid_forget()
             self.Percentage_label.grid(row=5, column=2, rowspan=2)
             self.total_label.config(bg="black", fg="white")
@@ -270,7 +272,7 @@ class Admin_login():
         self.usr_lbl.config(bg="azure2", fg="black")
         try:  # If user selects this mode before percentage label is created, this will generate an error. To prevent this error handling is used.
             self.lbl2.grid_forget()
-            self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6,padx=(50, 50))
+            self.lbl2.grid(row=2, column=2, rowspan=6, columnspan=6,padx=(20, 20))
             self.Percentage_label.grid_forget()
             self.Percentage_label.grid(row=5, column=2, rowspan=2)
             self.total_label.config(bg="snow", fg="black")
@@ -337,7 +339,18 @@ class Admin_login():
 
 
     def lables_and_entries(self, Text, X, Y, A, B, vari, col, col1):
-        """Generates all labels and entries for this window"""
+        """Generates all labels and entries for this window
+        Here,
+        Text = Text to display on widget
+        X = Row of label widget
+        Y= Column of label widget
+        A = Row of Entry Widget
+        B= Column of Entry Widget
+        vari = Variable to store values returned by entry widgets
+        col = Background color of widget
+        col1 = Foreground color of widget
+
+        """
         self.usr_lbl1 = Label(self.lbl, text=Text, justify=LEFT, compound=LEFT, font=10, bg=col, fg=col1)
         self.usr_lbl1.grid(row=X, column=Y)
         self.usr_lbl = Label(self.lbl, text="Select a Student:", justify=LEFT, compound=LEFT, padx=10, font=10,
@@ -369,6 +382,9 @@ class Admin_login():
             print("Please Select a student from this list.")
 
     def sort_option(self,*args):
+        """This function is called when a user chooses sorting option from option menu.
+        This Function is responsible for calling sorting method which is located at
+        backend package."""
         global index
         chosen_option = self.sort_method.get()
         if chosen_option == "First Name":
@@ -389,6 +405,9 @@ class Admin_login():
 
 
     def search_user(self,*args):
+        """This function is called when a user chooses searching option from option menu.
+                This Function is responsible for calling searching method which is located at
+                backend package."""
         global index
         method = self.selected_search_method.get()
         query = "select * from user_info"
@@ -413,6 +432,9 @@ class Admin_login():
 
 
     def opt_call(self, *args):
+        """This function is called when an user is selected from dropdown menu.
+        This function simply removes previous entry values and call showing_values_in_entry which will
+        insert marks of selected student in entry box."""
         try:
             self.Percentage_label.grid_forget()
         except:
@@ -474,7 +496,7 @@ class Admin_login():
         self.eml_add_lbl["state"] = DISABLED
 
 
-    def updating_values(self, record):
+    def updating_values(self):
         """To update student's marks"""
         global Total
         g = model.Grades.Grades(Mth.get(), Sci.get(), Nep.get(), Eng.get(), Soc.get(), Com.get(), EP.get(), Geo.get(),
@@ -533,6 +555,11 @@ class Admin_login():
         self.detail_label("Email Address: ", 6, 0)
 
     def detail_label(self, Text, X, Y):
+        """This function creates all the labels for info_win window.
+        Text = Text to display on widget
+        X=Row of widget
+        Y=Column of widget
+        """
         Label(self.info_win, text=Text, justify=LEFT, compound=LEFT, font=10, bg="black", fg="white").grid(row=X,
                                                                                                            column=Y)
 

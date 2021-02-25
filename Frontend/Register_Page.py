@@ -12,7 +12,7 @@ import Backend.DBConnect
 
 
 class Register():
-    """Here, Phone Number is changed into User Name
+    """
     New users are registered here."""
 
 
@@ -126,6 +126,7 @@ class Register():
         btn.pack()
 
     def placing_dob(self):
+        """This method removes any value present in date entry and inserts date selected form calender widget"""
         self.dob_entry.delete(0, END)
         self.dob_entry.insert(0, caln.get_date())
         caln.destroy()
@@ -169,7 +170,9 @@ class Register():
 
         else:
             messagebox.showerror("Required Field Missing", "Please Fill all the given fields!!")
+
     def btn_pressed_cancle(self):
+        """This function closes register window and returns to login page"""
         self.root2.destroy()
         tk = Tk()
         master.Login(tk)

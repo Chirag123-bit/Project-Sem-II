@@ -4,7 +4,6 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox, ttk
 import Frontend.Register_Page
-import Frontend.main as master
 import Frontend.Admin_Pannel
 import Frontend.User_Dashboard
 import model.User
@@ -15,7 +14,8 @@ import Backend.DBConnect
 
 
 class Login():
-    """This is login window. This window will validate user's credentials and redirect them to their personal account or register new users."""
+    """This is login window. This window will validate user's credentials and
+        redirect them to their personal account or register new users."""
 
     def __init__(self, root):
         self.root = root
@@ -85,7 +85,11 @@ class Login():
         self.root.mainloop()
 
     def labels(self, Text, x, y):
-        """This functions will generate all labels for this window."""
+        """This functions will generate all labels for this window.
+        Text = Text to display on widget
+        x = Row of widget
+        y = column of widget
+        """
         b = Label(self.frame, text=Text, font=self.button_font, anchor=W, width=8,
                   fg="blue")
         b.grid(row=x, column=y, sticky=W)
@@ -99,8 +103,14 @@ class Login():
         g = Label(self.frame, text="")
         g.grid(row=5, column=0)
 
-    def button(self, text_, x, y, ab, cd, comm):
-        """Opens new window depending on user's input(login/register)"""
+    def button(self, text_, ab, cd, comm):
+        """Opens new window depending on user's input
+        Here,
+        text_ = text to display on widget
+        ab = x cordinate of widget
+        cd = y co-ordinate of widget
+        com = button pressed by user(login/register)
+        """
         if comm == "log":
             but = ttk.Button(self.root, text=text_,
                              command=self.button_pressed_login, padding=6
@@ -112,6 +122,7 @@ class Login():
             but.place(x=ab, y=cd)
 
     def entry(self):
+        """Creates Username and Password Entry box for login page"""
         global pas
         usr = ttk.Entry(self.frame, font=self.button_font, text=self.usr1)
         usr.grid(row=0, column=7)
@@ -125,6 +136,7 @@ class Login():
 
 
     def button_pressed_login(self):
+        """This function is called when login is pressed and switches window based on credentials entered"""
         global usr_oid, rs_pas, rs_eml, rs_usrnm
 
         if self.usr1.get() == "root" and self.pass1.get() == "root":
@@ -205,6 +217,7 @@ class Login():
             messagebox.showerror("Error","Email Address or Password is wrong!")
 
     def update_pass(self):
+        """This function resets user's password"""
         u = model.User.User(passwd=self.pass_entry.get(), uname=str(self.un_entr.get()))
         que = "update user_info set Password = %s where UserName = %s"
         val = [u.get_passwd(), str(u.get_uname())]

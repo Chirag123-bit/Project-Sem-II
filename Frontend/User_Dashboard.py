@@ -1,7 +1,7 @@
 from tkinter import *
 
 from PIL import ImageTk, Image
-from tkinter import messagebox, ttk
+from tkinter import  ttk
 import Backend.DBConnect
 
 class user_login():
@@ -114,14 +114,23 @@ class user_login():
         self.DataBase_Calls()
         self.root.mainloop()
     def ext(self):
+        """Exits this window"""
         self.root.destroy()
 
     def lables_and_entries(self, Text, X, Y):
-        "Creates labels for this window"
+        """Creates labels for subjects
+        Here,
+        Text = Text to display on label
+        X= Row of widget
+        Y= Column of widget"""
         Label(self.lbl, text=Text, justify=LEFT, compound=LEFT, font=10, bg="black", fg="white",width=12).grid(row=X, column=Y)
 
     def detail_label(self, Text, X, Y):
-
+        """Creates labels for personal informations
+                Here,
+                Text = Text to display on label
+                X= Row of widget
+                Y= Column of widget"""
         Label(self.lbl2, text=Text, justify=LEFT, compound=LEFT, font=12, bg="black", fg="white").grid(row=X, column=Y,sticky=NSEW)
 
     def DataBase_Calls(self):

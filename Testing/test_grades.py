@@ -2,6 +2,9 @@ import unittest
 import model.Grades
 
 class Test_Grades(unittest.TestCase):
+    """This class will perform unit testing on Grades module.
+        Through this class, it is ensured that our program is able
+        to perform all CURD operations and filter any unwanted queries"""
     def setUp(self):
         self.g = model.Grades.Grades()
 
