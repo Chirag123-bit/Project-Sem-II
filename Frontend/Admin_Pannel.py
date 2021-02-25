@@ -111,7 +111,7 @@ class Admin_login():
         self.lables_and_entries("Geography", 8, 0, 8, 1, Geo, "black", "white")
 
         ttk.Button(self.root3, text="Update Marks",
-                   command=lambda: self.updating_values(str(self.selected_user.get()))).place(x=160, y=462, width=200,
+                   command=lambda: self.updating_values()).place(x=160, y=462, width=200,
                                                                                               height=40)
         self.updt1 = ttk.Button(self.root3, text="Update Info", command=self.updating_info, state=DISABLED)
         self.updt1.place(x=750, y=585, width=200, height=50)
@@ -180,7 +180,9 @@ class Admin_login():
 
 
     def dark_mode(self):
-        """Function for enabling dark mode"""
+        """Function for enabling dark mode
+        :return: None
+        """
         self.col = ("black", "white")
         self.root3.config(bg="black")
         self.lbl.config(bg="black", fg="white")
@@ -232,7 +234,9 @@ class Admin_login():
             pass
 
     def reg_mode(self):
-        """Function for reverting back to regular mode."""
+        """Function for reverting back to regular mode.
+        :return: None
+        """
         self.col = ("snow", "black")
         self.root3.config(bg="seashell")
         self.lbl.config(bg="azure2", fg="black")
@@ -283,7 +287,9 @@ class Admin_login():
         self.txt_box.config(bg="old lace", fg="gray0")
 
     def query(self):
-        """Function to show student's info in treeview for better readability and manageability."""
+        """Function to show student's info in treeview for better readability and manageability.
+        :return: None
+        """
         global Name_list, usname_list
         self.sort_method.set("Select a method")
         self.selected_search_method.set("Search By")
@@ -339,6 +345,7 @@ class Admin_login():
 
 
     def lables_and_entries(self, Text, X, Y, A, B, vari, col, col1):
+
         """Generates all labels and entries for this window
         Here,
         Text = Text to display on widget
@@ -349,6 +356,16 @@ class Admin_login():
         vari = Variable to store values returned by entry widgets
         col = Background color of widget
         col1 = Foreground color of widget
+
+        :param Text: str
+        :param X: int
+        :param Y: int
+        :param A: int
+        :param B: int
+        :param vari: str
+        :param col: str
+        :param col1: str
+        :return:None
 
         """
         self.usr_lbl1 = Label(self.lbl, text=Text, justify=LEFT, compound=LEFT, font=10, bg=col, fg=col1)
@@ -362,7 +379,11 @@ class Admin_login():
 
 
     def getrow(self, event):
-        """Get student's Details for performing Update/Delete operations"""
+
+        """Get student's Details for performing Update/Delete operations
+        :param event: str
+        :return: None
+        """
         try:
             item = self.treeview.item(self.treeview.focus())
             self.f_name1.set(item["values"][0])

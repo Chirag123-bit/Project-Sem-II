@@ -85,10 +85,15 @@ class Login():
         self.root.mainloop()
 
     def labels(self, Text, x, y):
-        """This functions will generate all labels for this window.
+        """
+        This functions will generate all labels for this window.
         Text = Text to display on widget
         x = Row of widget
         y = column of widget
+        :param Text: string
+        :param x: int
+        :param y: int
+        :return: none
         """
         b = Label(self.frame, text=Text, font=self.button_font, anchor=W, width=8,
                   fg="blue")
@@ -103,11 +108,20 @@ class Login():
         g = Label(self.frame, text="")
         g.grid(row=5, column=0)
 
-    def button(self, text_, ab, cd, comm):
+    def button(self, text_,x,y, ab, cd, comm):
+        """
+        :param text_: str
+        :param x: int
+        :param y: int
+        :param ab: int
+        :param cd: int
+        :param comm: str
+        :return: None
+        """
         """Opens new window depending on user's input
         Here,
         text_ = text to display on widget
-        ab = x cordinate of widget
+        ab = x co-rdinate of widget
         cd = y co-ordinate of widget
         com = button pressed by user(login/register)
         """
@@ -122,7 +136,9 @@ class Login():
             but.place(x=ab, y=cd)
 
     def entry(self):
-        """Creates Username and Password Entry box for login page"""
+        """Creates Username and Password Entry box for login page
+        :return: None
+        """
         global pas
         usr = ttk.Entry(self.frame, font=self.button_font, text=self.usr1)
         usr.grid(row=0, column=7)
@@ -130,6 +146,10 @@ class Login():
         pas.grid(row=4, column=7)
 
     def button_pressed_register(self):
+        """
+
+        :return: None
+        """
         self.root.destroy()
         tk = Tk()
         Frontend.Register_Page.Register(tk)

@@ -17,7 +17,11 @@ class DBConnect:
         """This method validates query and insert values into respective database
         Here,
         Query = Query to execute
-        value = Values supplied by user to be passed into database"""
+        value = Values supplied by user to be passed into database
+        :param query: str
+        :param values: str
+        :return: None
+        """
         if type(query) is not str:
             raise TypeError("plz provide string ")
         self.cur.execute(query, values)
@@ -27,7 +31,10 @@ class DBConnect:
         """This method validates query and returns values from respective database
                 Here,
                 Query = Query to execute
-                value = Values supplied by user to be passed into database (Optional)"""
+                value = Values supplied by user to be passed into database (Optional)
+                :param query: str
+                :param values: str
+                :return: list"""
         if type(query) is not str:
             raise TypeError("plz provide string ")
         self.cur.execute(query, values)
@@ -38,7 +45,11 @@ class DBConnect:
         """This method validates query and updates values into respective database
                 Here,
                 Query = Query to execute
-                value = Values supplied by user to be passed into database"""
+                value = Values supplied by user to be passed into database
+                :param query: str
+                :param values: str
+                :return: None
+                """
         if type(query) is not str:
             raise TypeError("plz provide string ")
         self.cur.execute(query, values)
@@ -49,7 +60,11 @@ class DBConnect:
         """This method validates query and removes values from respective database
                 Here,
                 Query = Query to execute
-                value = Values supplied by user to be passed into database"""
+                value = Values supplied by user to be passed into database
+                :param query: str
+                :param values: str
+                :return: None
+                """
         if type(query) is not str:
             raise TypeError("plz provide string ")
         self.cur.execute(query, value)

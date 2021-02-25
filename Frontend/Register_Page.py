@@ -1,4 +1,3 @@
-
 from tkinter import *
 
 from PIL import ImageTk, Image
@@ -10,13 +9,11 @@ import model.User
 import Backend.DBConnect
 
 
-
 class Register():
     """
     New users are registered here."""
 
-
-    def __init__(self,root):
+    def __init__(self, root):
         global img, F_Name, L_Name, E_Add, Passwd, Username, Passwd2, DoB
         self.root2 = root
         self.root2.geometry("960x600+200+0")
@@ -50,7 +47,7 @@ class Register():
         DoB = StringVar("")
         Label(self.root2, text="Softwarica College Registration Form", font=45, width=30,
               ).place(x=305,
-                              y=114)
+                      y=114)
         self.Reg_scrn("First Name", 100, 180, 220, 180, F_Name)
         self.Reg_scrn("Last Name", 495, 180, 616, 180, L_Name)
 
@@ -68,7 +65,17 @@ class Register():
         self.root2.mainloop()
 
     def Reg_scrn(self, Text, X, Y, a, b, var):
-        """Creating all the entry boxes and labels for this window"""
+        """
+        Creating all the entry boxes and labels for this window"
+        :param Text: str
+        :param X: int
+        :param Y: int
+        :param a: int
+        :param b: int
+        :param var: str
+        :return: None
+        """
+
         global suffix, entry1, grade, section
         labls = Label(self.root2, text=Text, font=self.Reg_fonts, anchor=NW, width=12, borderwidth=2, relief="ridge",
                       justify="center")
@@ -133,28 +140,29 @@ class Register():
         btn.destroy()
 
     def submit(self):
-        """Using RE(Regular expression) to validate user's email address and registering user into database if all conditions are satisfied."""
-        regex = '^[a-z0-9]+[\._]?[a-z0-9]+@gmail.com$'  # This is regex(regular expression) expression for checking if email address is correct
+        """Using RE(Regular expression) to validate user's email address and registering user into database if all
+        conditions are satisfied. """
+        regex = '^[a-z0-9]+[\._]?[a-z0-9]+@gmail.com$'  # This is regex(regular expression) expression for checking
+        # if email address is correct
         # Here ^ and $ suggests beginning and end of lime
 
         ver = (re.search(regex, E_Add.get()))
-
 
         if Passwd.get() == Passwd2.get() and (
                 len(F_Name.get()) != 0 and len(L_Name.get()) != 0 and len(Passwd.get()) != 0 and len(
             E_Add.get()) != 0 and len(Username.get()) != 0 and len(Passwd2.get()) != 0) and ver != None:
 
-            u = model.User.User(F_Name.get(),L_Name.get(),E_Add.get(),Passwd.get(),Username.get(),
-                                self.dob_entry.get(),grade.get(),section.get(),suffix.get())
+            u = model.User.User(F_Name.get(), L_Name.get(), E_Add.get(), Passwd.get(), Username.get(),
+                                self.dob_entry.get(), grade.get(), section.get(), suffix.get())
 
             query = "INSERT INTO user_info(FName,LName,EAddress,Password,UserName,DOB,Class,Section,Suffix)  \
                                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            values = (u.get_fname(),u.get_lname(),u.get_eadd(),u.get_passwd(),u.get_uname(),
-                      u.get_dob(),u.get_cls(),u.get_sec(),u.get_suff())
+            values = (u.get_fname(), u.get_lname(), u.get_eadd(), u.get_passwd(), u.get_uname(),
+                      u.get_dob(), u.get_cls(), u.get_sec(), u.get_suff())
             self.db.insert(query, values)
             query = "INSERT INTO grades(UserName, Maths,Science,Nepali,English,Social,Computer,EPH,Geography)  \
                                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            values = (u.get_uname(),0,0,0,0,0,0,0,0)
+            values = (u.get_uname(), 0, 0, 0, 0, 0, 0, 0, 0)
             self.db.insert(query, values)
 
             messagebox.showinfo("Sucess", "User Added")
