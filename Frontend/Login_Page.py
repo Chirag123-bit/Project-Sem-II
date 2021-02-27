@@ -170,15 +170,17 @@ class Login():
 
         else:
             u = model.User.User(uname=self.usr1.get(), passwd=self.pass1.get())
-            query = ("SELECT * FROM user_info WHERE UserName = %s AND Password =%s ")
+            query = ("SELECT * FROM login WHERE UserName = %s AND Password =%s ")
             values = [u.get_uname(),u.get_passwd()]
             records = self.db.select(query,values)
 
 
             if records:
-                for i in records:
-                    usr_oid = i[4]
-                    rs_pas = i[3]
+                query = ("SELECT * FROM user_info WHERE UserName = %s")
+                values = (u.get_uname(),)
+                row = self.db.select(query,values)
+                for i in row:
+                    usr_oid = i[3]
                     rs_eml = i[2]
                     rs_usrnm = i[4]
                     messagebox.showinfo("Welcome", "Welcome  " + str(i[-1]) + str(i[0]) + " " + str(i[1]))
@@ -239,7 +241,7 @@ class Login():
     def update_pass(self):
         """This function resets user's password"""
         u = model.User.User(passwd=self.pass_entry.get(), uname=str(self.un_entr.get()))
-        que = "update user_info set Password = %s where UserName = %s"
+        que = "update login set Password = %s where UserName = %s"
         val = [u.get_passwd(), str(u.get_uname())]
         submt["command"] = self.db.update(que, val)
         messagebox.showinfo("Success", "Password updated successfully")

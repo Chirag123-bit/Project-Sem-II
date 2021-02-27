@@ -135,6 +135,7 @@ class Admin_login():
         self.gender1 = StringVar()
         self.DOB1 = StringVar()
         self.e_add1 = StringVar()
+        self.passwd = StringVar()
         self.txt_box["state"] = DISABLED
 
 
@@ -300,7 +301,7 @@ class Admin_login():
         self.frm.place(x=598, y=170)
         self.frm.pack_propagate(False)
 
-        self.treeview = ttk.Treeview(self.frm, columns=(1, 2, 3, 4, 5, 6, 7, 8), show="headings",
+        self.treeview = ttk.Treeview(self.frm, columns=(1, 2, 3,4,5,6,7,8), show="headings",
                                      style='Calendar.Treeview', selectmode="extended")
         self.treeview.bind('<Button-1>', self.getrow)
         my_scrl = Scrollbar(self.frm, orient=HORIZONTAL, command=self.treeview.xview)
@@ -319,25 +320,24 @@ class Admin_login():
         self.treeview.column(2, minwidth=0, width=80, stretch=False)
         self.treeview.heading(3, text="Email Address", anchor="sw")
         self.treeview.column(3, minwidth=0, width=170, stretch=False)
-        self.treeview.heading(4, text="Password", anchor="sw")
+        self.treeview.heading(4, text="User Name", anchor="sw")
         self.treeview.column(4, minwidth=0, width=100, stretch=False)
-        self.treeview.heading(5, text="User Name", anchor="sw")
+        self.treeview.heading(5, text="DOB", anchor="sw")
         self.treeview.column(5, minwidth=0, width=100, stretch=False)
-        self.treeview.heading(6, text="DOB", anchor="sw")
-        self.treeview.column(6, minwidth=0, width=100, stretch=False)
-        self.treeview.heading(7, text="Class", anchor="sw")
+        self.treeview.heading(6, text="Class", anchor="sw")
+        self.treeview.column(6, minwidth=0, width=50)
+        self.treeview.heading(7, text="Section", anchor="sw")
         self.treeview.column(7, minwidth=0, width=50)
-        self.treeview.heading(8, text="Section", anchor="sw")
+        self.treeview.heading(8, text="Suffix", anchor="sw")
         self.treeview.column(8, minwidth=0, width=50)
 
         query = "select * from user_info"
         records = self.db.select(query)
-
         for record in records:
             self.treeview.insert("", "end",
                                  values=(
-                                     record[0], record[1], record[2], record[3], record[4], record[5], record[6],
-                                     record[7]
+                                     record[0], record[1], record[2], record[3], record[4], record[5],
+                                     record[6], record[7]
 
                                  ))
         self.search.configure(state = DISABLED)
@@ -384,21 +384,26 @@ class Admin_login():
         :param event: str
         :return: None
         """
+
         try:
             item = self.treeview.item(self.treeview.focus())
             self.f_name1.set(item["values"][0])
             self.l_name1.set(item["values"][1])
             self.u_name1.set(item["values"][4])
-            self.cls1.set(item["values"][6])
-            self.sec1.set(item["values"][7])
+            self.cls1.set(item["values"][5])
+            self.sec1.set(item["values"][6])
             self.e_add1.set(item["values"][2])
-            self.user.set(item["values"][4])
+            self.user.set(item["values"][3])
             self.usname["state"] = NORMAL
             self.usname.delete(0, END)
             self.usname.insert(0, item["values"][0])
             self.usname["state"] = DISABLED
             self.updt1["state"] = NORMAL
             self.del_btn["state"] = NORMAL
+            query = "select Password from login where UserName = %s"
+            value = (self.user.get(),)
+            pas = self.db.select(query,value)
+            self.passwd.set(pas[0][0])
         except IndexError:
             print("Please Select a student from this list.")
 
@@ -558,22 +563,25 @@ class Admin_login():
         l_name.grid(row=2, column=1)
         u_name = Entry(self.info_win, font=('Verdana', 12), bg="black", fg="white", textvariable=self.u_name1)
         u_name.grid(row=3, column=1)
+        u_pas = Entry(self.info_win, font=('Verdana', 12), bg="black", fg="white", textvariable=self.passwd)
+        u_pas.grid(row=4, column=1)
         cls = Entry(self.info_win, font=('Verdana', 12), bg="black", fg="white", textvariable=self.cls1)
-        cls.grid(row=4, column=1)
+        cls.grid(row=5, column=1)
         sec = Entry(self.info_win, font=('Verdana', 12), bg="black", fg="white", textvariable=self.sec1)
-        sec.grid(row=5, column=1)
+        sec.grid(row=6, column=1)
 
         e_add = Entry(self.info_win, font=('Verdana', 12), bg="black", fg="white", textvariable=self.e_add1)
-        e_add.grid(row=6, column=1)
+        e_add.grid(row=7, column=1)
         updt1 = Button(self.info_win, text="Update Info", command=self.updating_recs,
                        height=2, width=35)
-        updt1.grid(row=7, column=0, rowspan=2, columnspan=2, padx=10)
+        updt1.grid(row=8, column=0, rowspan=2, columnspan=2, padx=10)
         self.detail_label("First Name: ", 1, 0)
         self.detail_label("Last Name: ", 2, 0)
         self.detail_label("User Name: ", 3, 0)
-        self.detail_label("Class: ", 4, 0)
-        self.detail_label("Section: ", 5, 0)
-        self.detail_label("Email Address: ", 6, 0)
+        self.detail_label("Password: ", 4, 0)
+        self.detail_label("Class: ", 5, 0)
+        self.detail_label("Section: ", 6, 0)
+        self.detail_label("Email Address: ", 7, 0)
 
     def detail_label(self, Text, X, Y):
         """This function creates all the labels for info_win window.
@@ -597,10 +605,13 @@ class Admin_login():
 
         u = model.User.User(fname=self.f_name1.get(), lname=self.l_name1.get(), cls=self.cls1.get(),
                             sec=self.sec1.get(),
-                            eadd=self.e_add1.get(), uname=self.user.get())
+                            eadd=self.e_add1.get(), uname=self.user.get(), passwd=self.passwd.get())
         values = [u.get_fname(), u.get_lname(), u.get_cls(), u.get_sec(), u.get_eadd(), u.get_uname()]
 
         self.db.update(query, values)
+        query = "update login set Password = %s where UserName = %s"
+        value = [u.get_passwd(),u.get_uname()]
+        self.db.update(query,value)
 
         messagebox.showinfo("Update", "Records Updated")
         self.info_win.destroy()

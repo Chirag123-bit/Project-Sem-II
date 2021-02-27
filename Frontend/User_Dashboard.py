@@ -152,6 +152,7 @@ class user_login():
 
         query = ("""SELECT * FROM grades WHERE UserName =%s""")
         values = [self.usr_oid]
+        print(values)
         records = self.db.select(query, values)
 
         query = "select * from user_info where UserName = %s"
