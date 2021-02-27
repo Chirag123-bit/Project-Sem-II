@@ -1,3 +1,4 @@
+import user_defined_data_structure.stack
 class sorting:
     """This class is responsible for performing searching and sorting operation in our database"""
 
@@ -39,8 +40,15 @@ class searching:
                 :param index: int
                 :param item: str
                 :return: list"""
+        stack = user_defined_data_structure.stack.Stack()
+        for i in list:
+            stack.push(i)
         search_result = []  # Empty list to store result
-        for i in list:  # Looping through list
-            if i[index] == item:  # Matching items in our list
-                search_result.append(i)  # Adding item to our list above if matched
+        for i in range(stack.size()):  # Looping through list
+            record = stack.pop()
+            if record[index] == item:  # Matching items in our list
+                search_result.append(record)  # Adding item to our list above if matched
         return search_result  # Returning list which contains search results
+
+
+
