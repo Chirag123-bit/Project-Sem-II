@@ -2,7 +2,7 @@ from tkinter import *
 
 from PIL import ImageTk, Image
 from tkinter import ttk
-import Backend.DBConnect
+import backend.dbconnect
 
 
 class user_login():
@@ -109,7 +109,7 @@ class user_login():
         rpt_crd = Label(self.root, text="Report Card", font=60, bg="black", fg="blue2")
         rpt_crd.place(x=380, y=115)
 
-        self.db = Backend.DBConnect.DBConnect()
+        self.db = backend.dbconnect.DBConnect()
 
         self.DataBase_Calls()
         self.root.mainloop()

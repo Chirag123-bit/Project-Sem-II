@@ -3,11 +3,11 @@ from tkinter import *
 
 from PIL import ImageTk, Image
 from tkinter import messagebox, ttk
-import Frontend.Register_Page
-import Frontend.Admin_Pannel
-import Frontend.User_Dashboard
-import model.User
-import Backend.DBConnect
+import frontend.register_page
+import frontend.admin_pannel
+import frontend.user_dashboard
+import model.user
+import backend.dbconnect
 
 
 
@@ -33,7 +33,7 @@ class Login():
         self.std_log.place(x=0, y=0)  # Placing logo on left
         self.std_log1 = Label(self.wel, image=logo_img, bg="black")
         self.root.iconbitmap('Images/logo.ico')
-        self.db = Backend.DBConnect.DBConnect()
+        self.db = backend.dbconnect.DBConnect()
         
         
         self.ttk = ttk
@@ -152,7 +152,7 @@ class Login():
         """
         self.root.destroy()
         tk = Tk()
-        Frontend.Register_Page.Register(tk)
+        frontend.register_page.Register(tk)
 
 
     def button_pressed_login(self):
@@ -162,14 +162,14 @@ class Login():
         if self.usr1.get() == "root" and self.pass1.get() == "root":
             self.root.destroy()
             tk=Tk()
-            Frontend.Admin_Pannel.Admin_login(tk)
+            frontend.admin_pannel.Admin_login(tk)
 
         elif self.usr1.get() == "root" and self.pass1.get() != "root":
             messagebox.showerror("Error", "Please enter a valid password!")
             pas.delete(0, END)
 
         else:
-            u = model.User.User(uname=self.usr1.get(), passwd=self.pass1.get())
+            u = model.user.User(uname=self.usr1.get(), passwd=self.pass1.get())
             query = ("SELECT * FROM login WHERE UserName = %s AND Password =%s ")
             values = [u.get_uname(),u.get_passwd()]
             records = self.db.select(query,values)
@@ -186,7 +186,7 @@ class Login():
                     messagebox.showinfo("Welcome", "Welcome  " + str(i[-1]) + str(i[0]) + " " + str(i[1]))
                     self.root.destroy()
                     tk = Tk()
-                    Frontend.User_Dashboard.user_login(tk,usr_oid)
+                    frontend.user_dashboard.user_login(tk, usr_oid)
 
             else:
                 if len(self.usr1.get()) != 0 and len(self.pass1.get()) != 0:
@@ -228,7 +228,7 @@ class Login():
     def check(self):
         """If verification is sucessful, reset button is enabled."""
         query = "select * from user_info where EAddress = %s and UserName = %s"
-        u = model.User.User(eadd=self.em_entr.get(), uname=self.un_entr.get())
+        u = model.user.User(eadd=self.em_entr.get(), uname=self.un_entr.get())
         values = [u.get_eadd(), u.get_uname()]
         rec = self.db.select(query,values)
         if rec:
@@ -240,7 +240,7 @@ class Login():
 
     def update_pass(self):
         """This function resets user's password"""
-        u = model.User.User(passwd=self.pass_entry.get(), uname=str(self.un_entr.get()))
+        u = model.user.User(passwd=self.pass_entry.get(), uname=str(self.un_entr.get()))
         que = "update login set Password = %s where UserName = %s"
         val = [u.get_passwd(), str(u.get_uname())]
         submt["command"] = self.db.update(que, val)

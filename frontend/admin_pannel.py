@@ -4,12 +4,13 @@ from PIL import ImageTk, Image
 from tkinter import messagebox, ttk
 import smtplib
 from email.message import EmailMessage
-import Frontend.Login_Page
-import Backend.DBConnect
-import model.Grades
-import model.User
-import Backend.SearchingSorting
+import frontend.login_page
+import backend.dbconnect
+import model.grades
+import model.user
+import backend.searching_sorting
 import os
+
 
 
 class Admin_login():
@@ -44,7 +45,7 @@ class Admin_login():
         self.del_btn = ttk.Button(self.root3, text="Delete Record", state=DISABLED, command=self.delete_user)
         self.del_btn.place(x=955, y=585, width=200, height=50)
 
-        self.db = Backend.DBConnect.DBConnect()
+        self.db = backend.dbconnect.DBConnect()
 
         ttk.Button(self.root3, text="Exit", command=self.ext).place(x=960, y=700, width=200, height=50)
 
@@ -172,7 +173,7 @@ class Admin_login():
         """Function for exiting Admin Panel and returning to login page"""
         self.root3.destroy()
         tk = Tk()
-        Frontend.Login_Page.Login(tk)
+        frontend.login_page.Login(tk)
 
     def get_search_item(self,*args):
         """A mediator function which enables search entry box when search mode is chosen"""
@@ -421,8 +422,8 @@ class Admin_login():
             index = -3
         query = "select * from user_info"
         try:
-            sorted_record = Backend.SearchingSorting.sorting.insertion_sort(Backend.SearchingSorting.searching,
-                                                                            self.db.select(query), index)
+            sorted_record = backend.searching_sorting.sorting.insertion_sort(backend.searching_sorting.searching,
+                                                                             self.db.select(query), index)
             self.treeview.delete(*self.treeview.get_children())
             for ii in sorted_record:
                 self.treeview.insert("", "end", values=ii)
@@ -442,8 +443,9 @@ class Admin_login():
             index = 0
         elif method == "Last Name":
             index = 1
-        search_object = Backend.SearchingSorting.searching()
-        user = search_object.linear_search(lists,index,self.search.get())
+
+        search_object = backend.searching_sorting.searching(lists)
+        user = search_object.linear_search(index,self.search.get())
         self.treeview.delete(*self.treeview.get_children())
         if user:
             for ii in user:
@@ -525,7 +527,7 @@ class Admin_login():
     def updating_values(self):
         """To update student's marks"""
         global Total
-        g = model.Grades.Grades(Mth.get(), Sci.get(), Nep.get(), Eng.get(), Soc.get(), Com.get(), EP.get(), Geo.get(),
+        g = model.grades.Grades(Mth.get(), Sci.get(), Nep.get(), Eng.get(), Soc.get(), Com.get(), EP.get(), Geo.get(),
                                 self.selected_user.get())
         if int(g.get_math()) > 100 or int(g.get_science()) > 100 or int(g.get_nepali()) > 100 \
                 or int(g.get_english()) > 100 or int(g.get_social()) > 100 or int(g.get_computer()) > 100 \
@@ -603,7 +605,7 @@ class Admin_login():
 
                                 WHERE UserName = %s """
 
-        u = model.User.User(fname=self.f_name1.get(), lname=self.l_name1.get(), cls=self.cls1.get(),
+        u = model.user.User(fname=self.f_name1.get(), lname=self.l_name1.get(), cls=self.cls1.get(),
                             sec=self.sec1.get(),
                             eadd=self.e_add1.get(), uname=self.user.get(), passwd=self.passwd.get())
         values = [u.get_fname(), u.get_lname(), u.get_cls(), u.get_sec(), u.get_eadd(), u.get_uname()]
@@ -638,7 +640,7 @@ class Admin_login():
 
     def delete_user(self):
         query = "delete from user_info where UserName = %s"
-        u = model.User.User(uname=self.user.get())
+        u = model.user.User(uname=self.user.get())
         value = (u.get_uname(),)
         self.db.delete(query, value)
         messagebox.showinfo("Success", "User Record deleted")

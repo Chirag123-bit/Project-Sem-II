@@ -1,4 +1,6 @@
 import user_defined_data_structure.stack
+
+
 class sorting:
     """This class is responsible for performing searching and sorting operation in our database"""
 
@@ -10,6 +12,7 @@ class sorting:
         index = Index on the basis of which the sorting is to be performed
         If index = 0, sorting will be performed on the basis of First Name
         If index = 1, sorting will be performed on the basis of Last Name
+        If index = 2, sorting will be performed on the basis of Class
         :param lista: list
         :param index: int
         :return: list
@@ -25,30 +28,29 @@ class sorting:
 
 
 class searching:
-    def linear_search(self, list, index, item):
+    def __init__(self, lists):
+        self.stack = user_defined_data_structure.stack.Stack()
+        for i in lists:
+            self.stack.push(i)
+
+    def linear_search(self, index, item):
 
         """This method performs linear search in our database
                 Here,
                 list = List to be searched from
-                index = Index on the basis of which the searching is to be performed
+                index = Index on the basis of which the searching is to be performed (First/Last Name)
                 If index = 0, searching will be performed on the First Name
                 If index = 1, searching will be performed on the Last Name
                 And,
                 Item = Item to search for
 
-                :param list: list
                 :param index: int
                 :param item: str
                 :return: list"""
-        stack = user_defined_data_structure.stack.Stack()
-        for i in list:
-            stack.push(i)
+
         search_result = []  # Empty list to store result
-        for i in range(stack.size()):  # Looping through list
-            record = stack.pop()
-            if record[index] == item:  # Matching items in our list
+        for i in range(self.stack.size()):  # Looping through the stack
+            record = self.stack.pop()
+            if record[index] == item:  # Matching items in our stack
                 search_result.append(record)  # Adding item to our list above if matched
         return search_result  # Returning list which contains search results
-
-
-

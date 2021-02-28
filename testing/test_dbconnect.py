@@ -1,5 +1,5 @@
 import unittest
-import Backend.DBConnect
+import backend.dbconnect
 
 
 class Test_DBConnect(unittest.TestCase):
@@ -8,7 +8,7 @@ class Test_DBConnect(unittest.TestCase):
     to perform all CURD operations and filter any unwanted queries"""
 
     def setUp(self):
-        self.db = Backend.DBConnect.DBConnect()
+        self.db = backend.dbconnect.DBConnect()
 
     def test_select(self):
         query = "select * from user_info"

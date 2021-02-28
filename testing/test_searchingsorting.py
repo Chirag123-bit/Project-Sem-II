@@ -1,5 +1,5 @@
 import unittest
-import Backend.SearchingSorting
+import backend.searching_sorting
 
 
 class Test_Grades(unittest.TestCase):
@@ -7,8 +7,8 @@ class Test_Grades(unittest.TestCase):
         Through this class, it is ensured that our program is able
         to perform all searching and soring operations"""
     def setUp(self):
-        self.s = Backend.SearchingSorting.sorting()
-        self.so = Backend.SearchingSorting.searching()
+        self.s = backend.searching_sorting.sorting()
+        self.so = backend.searching_sorting.searching()
         self.lst = [('Tshering', 'Bcd'), ("Bimal", "Def"), ('Chirag', 'Abc')]
 
     def test_linear_search(self):

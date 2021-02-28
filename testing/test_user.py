@@ -1,5 +1,5 @@
 import unittest
-import model.User
+import model.user
 
 
 class Test_User(unittest.TestCase):
@@ -8,7 +8,7 @@ class Test_User(unittest.TestCase):
         to perform all CURD operations and filter any unwanted queries"""
 
     def setUp(self):
-        self.u = model.User.User()
+        self.u = model.user.User()
 
     def test_set_fname(self):
         self.u.set_fname("Chirag")

@@ -1,5 +1,5 @@
 from tkinter import *
-import Frontend.Login_Page as login
+import frontend.login_page as login
 
 
 

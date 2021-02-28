@@ -4,9 +4,9 @@ from PIL import ImageTk, Image
 from tkinter import messagebox, ttk
 from tkcalendar import *
 import re
-import Frontend.Login_Page as master
-import model.User
-import Backend.DBConnect
+import frontend.login_page as master
+import model.user
+import backend.dbconnect
 
 
 class Register():
@@ -34,7 +34,7 @@ class Register():
         self.std_log = Label(self.wel, image=logo_img, bg="SteelBlue1")
         self.std_log.place(x=0, y=0)
         self.std_log12 = Label(self.wel, image=logo_img, bg="SteelBlue1").place(y=0, x=850)
-        self.db = Backend.DBConnect.DBConnect()
+        self.db = backend.dbconnect.DBConnect()
 
         address_label = Label(self.wel, text="Dillibazar, Kathmandu", font=13, bg="SteelBlue1", fg="blue2")
         address_label.place(x=395, y=80)
@@ -152,7 +152,7 @@ class Register():
                 len(F_Name.get()) != 0 and len(L_Name.get()) != 0 and len(Passwd.get()) != 0 and len(
             E_Add.get()) != 0 and len(Username.get()) != 0 and len(Passwd2.get()) != 0) and ver != None:
 
-            u = model.User.User(F_Name.get(), L_Name.get(), E_Add.get(), Passwd.get(), Username.get(),
+            u = model.user.User(F_Name.get(), L_Name.get(), E_Add.get(), Passwd.get(), Username.get(),
                                 self.dob_entry.get(), grade.get(), section.get(), suffix.get())
 
             query = "INSERT INTO user_info(FName,LName,EAddress,UserName,DOB,Class,Section,Suffix)  \
