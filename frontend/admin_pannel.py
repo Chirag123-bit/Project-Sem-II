@@ -381,7 +381,9 @@ class Admin_login():
 
     def getrow(self, event):
 
-        """Get student's Details for performing Update/Delete operations
+        """
+        This is the handler function for treeview.
+        Get student's Details for performing Update/Delete operations
         :param event: str
         :return: None
         """
@@ -406,7 +408,7 @@ class Admin_login():
             pas = self.db.select(query,value)
             self.passwd.set(pas[0][0])
         except IndexError:
-            print("Please Select a student from this list.")
+            pass
 
     def sort_option(self,*args):
         """This function is called when a user chooses sorting option from option menu.

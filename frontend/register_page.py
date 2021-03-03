@@ -140,8 +140,11 @@ class Register():
         btn.destroy()
 
     def submit(self):
-        """Using RE(Regular expression) to validate user's email address and registering user into database if all
-        conditions are satisfied. """
+        """
+        This function accepts user input and insert user information in database if all conditions are satisfied.
+        RE(Regular expression) is used to validate user's email address
+
+        """
         regex = '^[a-z0-9]+[\._]?[a-z0-9]+@gmail.com$'  # This is regex(regular expression) expression for checking
         # if email address is correct
         # Here ^ and $ suggests beginning and end of lime
@@ -165,11 +168,10 @@ class Register():
             values = (u.get_uname(), 0, 0, 0, 0, 0, 0, 0, 0)
             self.db.insert(query, values)
 
-            query = "INSERT INTO login(UserName,Passwrd)  \
+            query = "INSERT INTO login(UserName,Password)  \
                                                 VALUES (%s,%s)"
-            values = (u.get_uname(),u.get_passwd())
+            values = (u.get_uname(), u.get_passwd())
             self.db.insert(query, values)
-
 
             messagebox.showinfo("Sucess", "User Added")
             self.btn_pressed_cancle()

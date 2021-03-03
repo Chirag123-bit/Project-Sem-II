@@ -35,8 +35,8 @@ class Test_DBConnect(unittest.TestCase):
         self.assertEqual("Churag", val[0][0])  # Test Passed
 
     def test_insert(self):
-        query = "insert into user_info values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        values = ("Abc", "Def", "abc@gmail.com", "12345", "Abc", "02/02/21", 5, "A", "Mr.")
+        query = "insert into user_info values(%s,%s,%s,%s,%s,%s,%s,%s)"
+        values = ("Abc", "Def", "abc@gmail.com", "Abc", "02/02/21", 5, "A", "Mr.")
         self.db.insert(query, values)
         query = "select FName from user_info where UserName = %s"
         values = ("Abc",)
